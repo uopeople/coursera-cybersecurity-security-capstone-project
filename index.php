@@ -16,16 +16,17 @@
 </head>
 
 <body>
-    <div>
-        <div id="header">
-            <i class="fas fa-comments"></i>
-            <h1>Coursera Capstone Project Messaging System</h1>
-        </div>
-        <div id="main-links">
-            <p id="login">Log in</p>
-            <p id="register">Register</p>
-        </div>
+    <div id="header">
+        <i class="fas fa-comments"></i>
+        <h1>Coursera Capstone Project Messaging System</h1>
     </div>
+    <div id="main-links">
+        <p id="login">Log in</p>
+        <p id="register">Register</p>
+    </div>
+    <?php getenv("CLEARDB_DATABASE_URL"); ?>
+    <?php getenv("DATABASE_URL"); ?>
+    <?php phpinfo(); ?>
 </body>
 
 </html>
