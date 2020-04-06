@@ -1,5 +1,8 @@
 {
+    "name": "dpet23/coursera_messaging_system",
+    "description": "Coursera Capstone Project Messaging System",
+    "license": "proprietary",
     "require": {
-        "php": "^7.4.3"
+        "php": "^7.3.11"
     }
 }
