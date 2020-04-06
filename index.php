@@ -1,3 +1,31 @@
+<?php
+    // **********************************************
+    // Database connection and configuration
+    // **********************************************
+    $db = parse_url(getenv("DATABASE_URL"));
+    $db["path"] = ltrim($db["path"], "/");
+
+    try {
+        // Data Source Name (DSN)
+        $dsn = "pgsql:" . sprintf(
+            "host=%s;port=%s;user=%s;password=%s;dbname=%s",
+            $db["host"], $db["port"], $db["user"], $db["pass"], $db["path"]
+        );
+        // PHP Data Object (PDO)
+        $pdo = new PDO($dsn);
+    } catch (PDOException $e) {
+        // die("Connection failed: " . $e->getMessage());
+        // echo $e->getMessage();
+
+        // http_response_code(500);
+        // die();
+
+        header("HTTP/1.1 500 Internal Server Error");
+        echo $e->getMessage();
+        // exit(1);
+    }
+?>
+
 <!DOCTYPE html>
 <html lang=en>
 
@@ -24,9 +52,6 @@
         <p id="login">Log in</p>
         <p id="register">Register</p>
     </div>
-    <?php getenv("CLEARDB_DATABASE_URL"); ?>
-    <?php getenv("DATABASE_URL"); ?>
-    <?php phpinfo(); ?>
 </body>
 
 </html>
