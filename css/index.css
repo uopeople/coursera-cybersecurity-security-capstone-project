@@ -26,9 +26,27 @@
     padding-right: 0.75em;
 }
 
-#main-links p {
+#main-links a {
     font-size: 1.75em;
     font-weight: bold;
+    color: black;
+    text-decoration: none;
     padding: 1em;
+    margin: 1em;
     border: 1px solid black;
+    border-radius: 20%;
+}
+
+#main-links #login:hover {
+    background-color: #f4a259;
+    /* color: white; */
+}
+
+#main-links #register:hover {
+    background-color: #e9d985;
+    /* color: white; */
+}
+
+#register-form {
+    text-align: center;
 }

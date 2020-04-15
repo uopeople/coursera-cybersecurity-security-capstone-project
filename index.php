@@ -22,8 +22,8 @@
             <h1>Coursera Capstone Project Messaging System</h1>
         </div>
         <div id="main-links">
-            <p id="login">Log in</p>
-            <p id="register">Register</p>
+            <a id="login" href="#">Log in</a>
+            <a id="register" href="/register.php">Register</a>
         </div>
     </div>
 </body>
