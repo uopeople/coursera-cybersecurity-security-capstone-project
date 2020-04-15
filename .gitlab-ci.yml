@@ -1,0 +1,17 @@
+image: ruby:2
+
+stages:
+    - deploy
+
+deploy_prod:
+    stage: deploy
+    only:
+        - master
+    environment:
+        name: production
+        url: https://$HEROKU_APP_NAME.herokuapp.com/
+    script:
+        - apt-get update -qy
+        - apt-get install -y ruby-dev
+        - gem install dpl
+        - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
