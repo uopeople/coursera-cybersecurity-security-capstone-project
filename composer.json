@@ -3,6 +3,12 @@
     "description": "Coursera Capstone Project Messaging System",
     "license": "proprietary",
     "require": {
-        "php": "^7.3.11"
+        "php": "^7.3.11",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "lib\\": "lib/"
+        }
     }
 }
