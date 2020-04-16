@@ -6,6 +6,8 @@
     <meta name=viewport content="width=device-width, initial-scale=1" />
 
     <meta name=author content="Daniel Petrescu">
+    <meta name=author content="Claudio Kressibucher">
+    <meta name=author content="Giuseppe Arcidiacono">
     <title>Messaging System</title>
 
     <!-- CSS -->
@@ -16,15 +18,13 @@
 </head>
 
 <body>
-    <div>
-        <div id="header">
-            <i class="fas fa-comments"></i>
-            <h1>Coursera Capstone Project Messaging System</h1>
-        </div>
-        <div id="main-links">
-            <p id="login">Log in</p>
-            <p id="register">Register</p>
-        </div>
+    <div id="header">
+        <i class="fas fa-comments"></i>
+        <h1>Coursera Capstone Project Messaging System</h1>
+    </div>
+    <div id="main-links">
+        <p id="login">Log in</p>
+        <p id="register">Register</p>
     </div>
 </body>
 
