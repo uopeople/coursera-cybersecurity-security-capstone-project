@@ -23,8 +23,12 @@
         <h1>Coursera Capstone Project Messaging System</h1>
     </div>
     <div id="main-links">
-        <a id="login" href="#">Log in</a>
-        <a id="register" href="/register.php">Register</a>
+        <p id="login">Log in</p>
+        <p id="register">
+            <a href="register.php">
+                <i class="fas fa-user-plus"></i>&nbsp;Register
+            </a>
+        </p>
     </div>
 </body>
 
