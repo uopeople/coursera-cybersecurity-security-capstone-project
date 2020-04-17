@@ -4,6 +4,8 @@
 namespace lib\db;
 
 use lib\model\User;
+use lib\utils\Clock;
+use lib\utils\ClockImpl;
 use PDO;
 
 /**
@@ -17,10 +19,15 @@ class Users
      */
     private $pdo;
 
+    /**
+     * @var Clock
+     */
+    private $clock;
 
-    public function __construct()
+    public function __construct(PDO $pdo, ?Clock $clock = null)
     {
-        $this->pdo = Connection::get_db_pdo();
+        $this->clock = $clock ?? new ClockImpl();
+        $this->pdo = $pdo;
     }
 
     /**
@@ -102,36 +109,13 @@ class Users
         // Times may differ (slightly) between SQL and PHP server.
         // When we decide if a user is allowed to login again, we use PHP to get the current time.
         // Because of this, it's more robust if we also use PHP when storing the 'locked_time'.
-        $now = time();
+        $now = $this->clock->getCurrentTimestamp();
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$now, $userId]);
         $updatedRows = $stmt->rowCount();
         if ($updatedRows !== 1) {
             throw new \Exception('Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement');
         }
-    }
-
-    /**
-     * Checks if a given user is locked or not.
-     *
-     * @param User $user The user that should be checked. Can be loaded via `loadUserByUsername` or similar methods.
-     * @param int  $lockDurationSeconds The time in seconds, after which a locked user is unlocked again.
-     *
-     * @return bool
-     */
-    public function isUserLocked(User $user, int $lockDurationSeconds)
-    {
-        $now = time();
-        $userLockedSince = $user->getLockedTime();
-        if ($userLockedSince === null) {
-            // user is not locked
-            return false;
-        }
-        if ($userLockedSince + $lockDurationSeconds < $now) {
-            // user was locked, but lock duration has expired...
-            return false;
-        }
-        return true;
     }
 
     public function registerNewUser(string $username, string $email, string $cleartextPassword)
