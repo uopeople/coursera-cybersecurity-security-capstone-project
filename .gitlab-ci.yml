@@ -6,10 +6,10 @@ test:
   stage: testing
   image: composer:1.9
   variables:
-    - POSTGRES_DB: "app"
-    - POSTGRES_USER: "app"
-    - POSTGRES_PASSWORD: "unsafe-password"
-    - DATABASE_URL: "psql://app:unsafe-password@postgres:5432/app"
+    POSTGRES_DB: "app"
+    POSTGRES_USER: "app"
+    POSTGRES_PASSWORD: "unsafe-password"
+    DATABASE_URL: "psql://app:unsafe-password@postgres:5432/app"
   services:
     - postgres:12.2
   script:
