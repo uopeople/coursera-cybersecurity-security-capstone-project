@@ -1,3 +1,17 @@
+<?php
+    include __DIR__ . '/../setup.php';
+
+    function display()
+    {
+        echo "hello ".$_POST["email"];
+    }
+
+    if(isset($_POST['register-submit']))
+    {
+        display();
+    }
+?>
+
 <!DOCTYPE html>
 <html lang=en>
 
@@ -8,7 +22,7 @@
     <meta name=author content="Daniel Petrescu">
     <meta name=author content="Claudio Kressibucher">
     <meta name=author content="Giuseppe Arcidiacono">
-    <title>Messaging System</title>
+    <title>Register | Messaging System</title>
 
     <!-- CSS -->
     <link rel=stylesheet media=all href=css/index.css>
@@ -19,26 +33,46 @@
 
 <body>
     <div id="header">
-        <i class="fas fa-comments"></i>
+        <i class="fas fa-comments icon"></i>
         <h1>Coursera Capstone Project Messaging System</h1>
     </div>
-    <form id="register-form" action="#" method="post">
-        <h1>Create a new account</h1>
 
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required>
-        <br>
+    <form id="register-form" action="register.php" method="post">
+        <h2>Create a new account</h2>
 
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
-        <br>
+        <div class="form-container">
+            <i class="fa fa-user icon"></i>
+            <input class="input-field" type="text" placeholder="Username" name="username">
+        </div>
 
-        <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
-        <br>
+        <div class="form-container">
+            <i class="fa fa-envelope icon"></i>
+            <input class="input-field" type="email" placeholder="Email" name="email">
+        </div>
 
-        <button type="submit" id="register-btn">Register</button>
+        <div class="form-container">
+            <i class="fa fa-key icon"></i>
+            <input class="input-field" type="password" placeholder="Password" name="password">
+        </div>
+
+        <div class="form-container">
+            <i class="fa fa-key icon"></i>
+            <input class="input-field" type="password" placeholder="Repeat password" name="password-repeat">
+        </div>
+
+        <div class="form-container">
+            <button type="submit" name="register-submit"><i class="fas fa-user-plus icon"></i>Register</button>
+        </div>
     </form>
+
+    <div id="main-links">
+        <p id="link-home">
+            <a href="index.php">
+                <i class="fas fa-home icon"></i>&nbsp;Back to Home
+            </a>
+        </p>
+        <p id="login">Log in</p>
+    </div>
 </body>
 
 </html>

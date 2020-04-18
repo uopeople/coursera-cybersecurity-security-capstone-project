@@ -1,4 +1,4 @@
-#header, #main-links {
+#header, #main-links, form {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -25,7 +25,7 @@
     font-size: 2em;
 }
 
-.fas {
+.icon {
     padding-right: 0.75em;
 }
 
@@ -34,7 +34,6 @@
 }
 
 #main-links p a {
-    font-size: 1.5em;
     color: black;
     text-decoration: none;
     padding: 1em;
@@ -43,10 +42,60 @@
     border-radius: 20px;
 }
 
-#main-links a:hover {
+#main-links p a:hover {
     background-color: #e9d985;
 }
 
-#register-form {
+.large-font {
+    font-size: 1.5em;
+}
+
+
+/* Forms */
+
+form {
+    flex-direction: column;
+}
+
+.form-container {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 75%;
+    margin-bottom: 15px;
+}
+
+.form-container .icon {
+    padding: 10px;
+    background: dodgerblue;
+    color: white;
+    min-width: 50px;
     text-align: center;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    outline: none;
+}
+
+.form-container input:focus {
+    border: 2px solid dodgerblue;
+}
+
+.form-container button {
+    font-size: 0.9em;
+    background-color: dodgerblue;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.form-container button:hover {
+    opacity: 1;
 }

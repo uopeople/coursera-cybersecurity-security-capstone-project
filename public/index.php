@@ -19,14 +19,14 @@
 
 <body>
     <div id="header">
-        <i class="fas fa-comments"></i>
+        <i class="fas fa-comments icon"></i>
         <h1>Coursera Capstone Project Messaging System</h1>
     </div>
     <div id="main-links">
         <p id="login">Log in</p>
         <p id="register">
-            <a href="register.php">
-                <i class="fas fa-user-plus"></i>&nbsp;Register
+            <a href="register.php" class="large-font">
+                <i class="fas fa-user-plus icon"></i>&nbsp;Register
             </a>
         </p>
     </div>
