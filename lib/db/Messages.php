@@ -46,66 +46,49 @@ class Messages
 
 
     /**
-     * Returns messages whith the given sender. If no such message exists, this function returns null.
+     * Returns messages whith the given sender.
      * 
      * @param string $senderId
      *
      * @return Message|null
      */
-    public function loadMessagesBySender(int $senderId): ?Message
+    public function loadMessagesBySender(int $senderId)
     {
         $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE sender = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$senderId]);
-        $message = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$message) {
-            // not found
-            return null;
+        $messages = [];
+        if ($stmt->execute()) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $mesages[] =  $this->createMessageEntityFromDbRecord($row);
+            }
         }
-        return $this->createMessageEntityFromDbRecord($message);
-    }
+        return $mesages;
+}
+    
 
    /**
-     * Returns messages whith the given recipient. If no such message exists, this function returns null.
+     * Returns messages whith the given recipient.
      * 
      * @param string $recipientId
      *
      * @return Message|null
      */
-    public function loadMessagesByRecipient(int $recipientId): ?Message
+    public function loadMessagesByRecipient(int $recipientId)
     {
         $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE recipient = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$recipientId]);
-        $message = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$message) {
-            // not found
-            return null;
+        $messages = [];
+        if ($stmt->execute()) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $mesages[] =  $this->createMessageEntityFromDbRecord($row);
+            }
         }
-        return $this->createMessageEntityFromDbRecord($message);
+        return $mesages;
     }
 
-    /**
-     * Checks if a given message is read or not.
-     *
-     * @param Message $message The message that should be checked. Can be loaded via `loadMessageByMessagename` or similar methods.
-     *
-     * @return bool
-     */
-    public function isMessageRead(Message $message, int $lockDurationSeconds)
-    {
-        $now = time();
-        $messageLockedSince = $message->getLockedTime();
-        if ($messageLockedSince === null) {
-            // message is not locked
-            return false;
-        }
-        if ($messageLockedSince + $lockDurationSeconds < $now) {
-            // message was locked, but lock duration has expired...
-            return false;
-        }
-        return true;
-    }
+   
 
     public function insertNewMessage(int $sender, int $recipient, string $message, string $date, bool $read)
     {
