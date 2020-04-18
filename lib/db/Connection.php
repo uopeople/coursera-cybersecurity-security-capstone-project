@@ -47,6 +47,7 @@ class Connection {
 
             // PHP Data Object (PDO)
             self::$pdo = new PDO($dsn);
+            self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             self::exitWithError('Failed to initialize database connection (3)');
         }
