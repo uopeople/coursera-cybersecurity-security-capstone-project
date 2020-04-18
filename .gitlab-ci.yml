@@ -1,10 +1,19 @@
-image: ruby:2
-
 stages:
+    - testing
     - deploy
+
+test:
+  stage: testing
+  image: php:7.3
+  script:
+    # this is a quick syntactic check for php files
+    - php --version
+    - ./check_php_syntax.sh
+    # TODO phpunit unit tests, phpunit db tests
 
 deploy_prod:
     stage: deploy
+    image: ruby:2
     only:
         - master
     environment:
