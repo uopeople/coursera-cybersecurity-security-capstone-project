@@ -4,12 +4,14 @@ stages:
 
 test:
   stage: testing
-  image: php:7.3
+  image: composer:1.10
   script:
-    # this is a quick syntactic check for php files
     - php --version
+    - composer --version
+    # this is a quick syntactic check for php files
     - ./check_php_syntax.sh
-    # TODO phpunit unit tests, phpunit db tests
+    - composer install
+    - ./vendor/bin/phpunit --testdox --bootstrap ./vendor/autoload.php --no-configuration ./tests/unit
 
 deploy_prod:
     stage: deploy
