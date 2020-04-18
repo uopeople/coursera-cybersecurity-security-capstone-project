@@ -4,14 +4,24 @@ stages:
 
 test:
   stage: testing
-  image: composer:1.10
+  image: composer:1.9
+  variables:
+    - POSTGRES_DB: "app"
+    - POSTGRES_USER: "app"
+    - POSTGRES_PASSWORD: "unsafe-password"
+    - DATABASE_URL: "psql://app:unsafe-password@postgres:5432/app"
+  services:
+    - postgres:12.2
   script:
     - php --version
     - composer --version
     # this is a quick syntactic check for php files
     - ./check_php_syntax.sh
     - composer install
+    # unit tests (no database access)
     - ./vendor/bin/phpunit --testdox --bootstrap ./vendor/autoload.php --no-configuration ./tests/unit
+     # database tests
+    - ./vendor/bin/phpunit --testdox --bootstrap ./vendor/autoload.php --no-configuration ./tests/db
 
 deploy_prod:
     stage: deploy
