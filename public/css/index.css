@@ -110,6 +110,17 @@ form {
     opacity: 0.9;
 }
 
+.form-container #registration-error {
+    grid-area: button;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+.form-container #registration-error:empty {
+    display: none;
+}
+
 .form-container button:hover {
     opacity: 1;
 }

@@ -72,6 +72,12 @@ if(isset($_POST['register-submit'])) {
                 <i class="fas fa-user-plus icon"></i>Register
             </button>
         </div>
+
+        <div class="form-container">
+            <span id="registration-error">
+                <?php echo register_post::$registrationErr;?>
+            </span>
+        </div>
     </form>
 
     <div id="main-links">
