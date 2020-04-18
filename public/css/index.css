@@ -58,25 +58,29 @@ form {
 }
 
 .form-container {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
+    display: grid;
+    grid-template-columns: 70px auto;
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+        "icon input"
+        ". error"
+        "button button";
+
     width: 75%;
     margin-bottom: 15px;
 }
 
 .form-container .icon {
+    grid-area: icon;
+    min-width: 50px;
     padding: 10px;
     background: dodgerblue;
     color: white;
-    min-width: 50px;
     text-align: center;
 }
 
 .form-container input {
-    width: 100%;
+    grid-area: input;
     padding: 10px;
     outline: none;
 }
@@ -85,14 +89,24 @@ form {
     border: 2px solid dodgerblue;
 }
 
+.form-container .error {
+    grid-area: error;
+    padding: 10px;
+    color: red;
+}
+
+.form-container .error:empty {
+    display: none;
+}
+
 .form-container button {
+    grid-area: button;
     font-size: 0.9em;
     background-color: dodgerblue;
     color: white;
     padding: 15px 20px;
     border: none;
     cursor: pointer;
-    width: 100%;
     opacity: 0.9;
 }
 

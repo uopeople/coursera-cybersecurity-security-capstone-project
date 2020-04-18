@@ -26,7 +26,7 @@
         <p id="login">Log in</p>
         <p id="register">
             <a href="register.php" class="large-font">
-                <i class="fas fa-user-plus icon"></i>&nbsp;Register
+                <i class="fas fa-user-plus icon"></i>Register
             </a>
         </p>
     </div>
