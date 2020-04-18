@@ -1,51 +1,12 @@
 <?php
-    include __DIR__ . '/../setup.php';
+include __DIR__ . '/../setup.php';
 
-    // Validate form values on POST
-    if(isset($_POST['register-submit']))
-    {
-        if (empty($_POST["username"])) {
-            $usernameErr = "Username is required";
-        } else {
-            $username = clean_input($_POST["username"]);
-        }
+use lib\db\register_post;
 
-        if (empty($_POST["email"])) {
-            $emailErr = "Email address is required";
-        } else {
-            $email = clean_input($_POST["email"]);
-        }
-
-        if (empty($_POST["password"])) {
-            $passErr = "Password is required";
-        } else {
-            $pass = clean_input($_POST["password"]);
-        }
-
-        if (!empty($_POST["password"])
-            and !empty($_POST["password-repeat"])
-            and $_POST["password"] != $_POST["password-repeat"]
-        ) {
-            $passRptErr = "Passwords don't match";
-        }
-    }
-
-    /**
-     * Ensure that user-entered data is safe for processing by:
-     *      - Removing whitespace from the beginning and end of the string
-     *      - Removing backslashes to unquote the string
-     *      - Converting special characters to HTML entities
-     *
-     * @param string $data The data entered by the user in a form field.
-     *
-     * @return string A safe version of the user-entered data.
-     */
-    function clean_input(string $data): string {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
+// Register user on submission of the form.
+if(isset($_POST['register-submit'])) {
+    register_post::handle_registration();
+}
 ?>
 
 <!DOCTYPE html>
@@ -79,29 +40,31 @@
         <div class="form-container">
             <i class="fa fa-user icon"></i>
             <input class="input-field" type="text" name="username"
-                   placeholder="Username" value="<?php echo $username;?>">
-            <span class="error"><?php echo $usernameErr;?></span>
+                   placeholder="Username"
+                   value="<?php echo register_post::$username;?>">
+            <span class="error"><?php echo register_post::$usernameErr;?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-envelope icon"></i>
             <input class="input-field" type="email" name="email"
-                   placeholder="Email" value="<?php echo $email;?>">
-            <span class="error"><?php echo $emailErr;?></span>
+                   placeholder="Email"
+                   value="<?php echo register_post::$email;?>">
+            <span class="error"><?php echo register_post::$emailErr;?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-key icon"></i>
             <input class="input-field" type="password" name="password"
                    placeholder="Password">
-            <span class="error"><?php echo $passErr;?></span>
+            <span class="error"><?php echo register_post::$passErr;?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-key icon"></i>
             <input class="input-field" type="password" name="password-repeat"
                    placeholder="Repeat password">
-            <span class="error"><?php echo $passRptErr;?></span>
+            <span class="error"><?php echo register_post::$passRptErr;?></span>
         </div>
 
         <div class="form-container">
