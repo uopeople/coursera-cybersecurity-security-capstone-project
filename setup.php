@@ -6,3 +6,5 @@
  */
 
 include __DIR__ . '/vendor/autoload.php';
+
+define('TEMPLATE_DIR', __DIR__ . '/templates');
