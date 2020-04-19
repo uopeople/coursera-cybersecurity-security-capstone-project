@@ -1,3 +1,9 @@
 # Directories
 img/
 vendor/
+
+# IDE / editor configs
+.idea/
+
+# ignore PHPUnit cache
+/.phpunit.result.cache
