@@ -72,7 +72,7 @@ class Messages
      * 
      * @param string $recipientId
      *
-     * @return Message|null
+     * @return array
      */
     public function loadMessagesByRecipient(int $recipientId)
     {
