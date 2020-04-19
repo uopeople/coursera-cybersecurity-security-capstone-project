@@ -4,7 +4,7 @@
 namespace lib\model;
 
 /**
- * A user entity
+ * A message entity
  *
  */
 class Message
@@ -25,10 +25,21 @@ class Message
      */
     private $recipient;
 
+     /**
+     ** @var string
+     */
+    private $title;
+
+
     /**
      ** @var string
      */
     private $message;
+    
+     /**
+     ** @var bool
+     */
+    private $read;
 
     /**
      * @var string
@@ -77,7 +88,7 @@ class Message
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getRecipient(): int
     {
@@ -91,11 +102,19 @@ class Message
     {
         return $this->message;
     }
+    
+     /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
 
     /**
      * @return bool
      */
-    public function getRead(): bool
+    public function isRead(): bool
     {
         return $this->read;
     }
