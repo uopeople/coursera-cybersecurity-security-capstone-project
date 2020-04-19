@@ -118,7 +118,7 @@ class Users
         $now = new DateTime();
         $now->setTimestamp($this->clock->getCurrentTimestamp());
         $now->setTimezone(new DateTimeZone('UTC'));
-        $nowStr = $now->format('Y-m-d H:i:s');
+        $nowStr = $now->format(DbUtils::SQL_DATE_TIME_FORMAT);
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$nowStr, $requestIp, $userId]);
         $updatedRows = $stmt->rowCount();
@@ -201,7 +201,7 @@ class Users
         $lockedTimeStr = $dbRecord['locked_time'];
         if ($lockedTimeStr !== null) {
             $lockedTime = DateTime::createFromFormat(
-                'Y-m-d H:i:s',
+                DbUtils::SQL_DATE_TIME_FORMAT,
                 $lockedTimeStr,
                 new DateTimeZone('UTC')
             );
