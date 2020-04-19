@@ -3,8 +3,7 @@
 
 namespace lib\service;
 
-
-use lib\model\User;
+use lib\model\UserInfo;
 
 class SessionManagerPhp implements SessionManager
 {
@@ -14,7 +13,7 @@ class SessionManagerPhp implements SessionManager
         session_regenerate_id();
     }
 
-    function getAuthenticatedUser(): ?User
+    function getAuthenticatedUser(): ?UserInfo
     {
         if (!empty($_SESSION['is_authenticated']) && $_SESSION['is_authenticated']) {
             return $_SESSION['user'] ?? null;
@@ -22,9 +21,12 @@ class SessionManagerPhp implements SessionManager
         return null;
     }
 
-    function setAuthenticatedUser(User $user)
+    function setAuthenticatedUser(UserInfo $user)
     {
         $_SESSION['is_authenticated'] = true;
-        $_SESSION['user'] = $user;
+
+        // important: do NOT save the original $user object to the session. Instead, create a copy that
+        // only contains id and username. (UserInfo may contain additional properties, added by subclasses).
+        $_SESSION['user'] = new UserInfo($user->getId(), $user->getUsername());
     }
 }

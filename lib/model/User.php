@@ -9,18 +9,8 @@ use DateTime;
  * A user entity
  *
  */
-class User
+class User extends UserInfo
 {
-
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $username;
 
     /**
      * @var string
@@ -74,8 +64,7 @@ class User
         int $loginAttempts,
         ?DateTime $lockedTime
     ) {
-        $this->id = $id;
-        $this->username = $username;
+        parent::__construct($id, $username);
         $this->email = $email;
         $this->password = $password;
         $this->passwordReset = $passwordReset;
@@ -83,22 +72,6 @@ class User
         $this->loginAttempts = $loginAttempts;
         $this->lockedTime = $lockedTime;
         $this->passwordReset = $passwordReset;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsername(): string
-    {
-        return $this->username;
     }
 
     /**

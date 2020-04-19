@@ -3,14 +3,14 @@
 
 namespace lib\service;
 
-use lib\model\User;
+use lib\model\UserInfo;
 
 interface SessionManager
 {
 
     function regenerateId();
 
-    function getAuthenticatedUser(): ?User;
+    function getAuthenticatedUser(): ?UserInfo;
 
-    function setAuthenticatedUser(User $user);
+    function setAuthenticatedUser(UserInfo $user);
 }

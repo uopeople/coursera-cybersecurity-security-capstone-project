@@ -17,7 +17,7 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST') {
 try {
     $pdo = Connection::get_db_pdo();
     $users = new Users($pdo);
-    $loginService = new LoginService($users, 60, 2);
+    $loginService = new LoginService($users);
     $result = $loginService->tryLogin($_POST['username'], $_POST['password'], IpUtils::getIp());
     if ($result->isSuccessful()) {
         // TODO redirect to inbox instead (after merging #14)
