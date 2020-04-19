@@ -17,7 +17,9 @@ class IpUtils
         //  But note that if the proxy does NOT set this header, and instead relays it from the client (which it shouldn't),
         //  then this would be a security risk, since the client could *very easily* fake it's IP.
         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $ip = reset($ipList);
+            $ip = trim($ip);
         } else {
             $ip = $_SERVER['REMOTE_ADDR'] ?? null;
         }
