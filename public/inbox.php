@@ -3,6 +3,9 @@
 
 <?php
 include __DIR__ . '/../setup.php';
+
+use lib\db\Messages;
+
 ?>
 
 <head>
@@ -32,9 +35,6 @@ include __DIR__ . '/../setup.php';
             </div>
             <div>
             <?php
-            use lib\model\Messages;
-            use lib\db\Messages;
-            use PDO;
             if (isset($_SESSION['user']))
             {
                 $user = $_SESSION["user"];
