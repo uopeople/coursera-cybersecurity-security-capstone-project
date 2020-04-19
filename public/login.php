@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang=en>
-
 <?php
 include __DIR__ . '/../setup.php';
 ?>
+
+<!DOCTYPE html>
+<html lang=en>
 
 <head>
     <meta http-equiv=Content-Type content="text/html; charset=utf-8">
