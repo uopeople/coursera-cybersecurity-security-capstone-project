@@ -3,22 +3,14 @@
 
 namespace lib\model;
 
+use DateTime;
+
 /**
  * A user entity
  *
  */
-class User
+class User extends UserInfo
 {
-
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $username;
 
     /**
      * @var string
@@ -27,6 +19,7 @@ class User
 
     /**
      * The password hash (not: this is not the cleartext password, but an output of `password_hash`).
+     *
      * @var string
      */
     private $password;
@@ -47,21 +40,10 @@ class User
     private $loginAttempts;
 
     /**
-     * (timestamp)
-     * @var int | null
+     * @var DateTime | null
      */
     private $lockedTime;
 
-    /**
-     * @param int $id
-     * @param string $username
-     * @param string $email
-     * @param string $password
-     * @param string $loginIp
-     * @param int $loginAttempts
-     * @param int $lockedTime
-     * @param bool $passwordReset
-     */
     public function __construct(
         int $id,
         string $username,
@@ -70,11 +52,9 @@ class User
         ?bool $passwordReset,
         ?string $loginIp,
         int $loginAttempts,
-        ?int $lockedTime
-    )
-    {
-        $this->id = $id;
-        $this->username = $username;
+        ?DateTime $lockedTime
+    ) {
+        parent::__construct($id, $username);
         $this->email = $email;
         $this->password = $password;
         $this->passwordReset = $passwordReset;
@@ -82,22 +62,6 @@ class User
         $this->loginAttempts = $loginAttempts;
         $this->lockedTime = $lockedTime;
         $this->passwordReset = $passwordReset;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsername(): string
-    {
-        return $this->username;
     }
 
     /**
@@ -143,9 +107,9 @@ class User
     /**
      * The timestamp when the user was locked.
      *
-     * @return int|null
+     * @return DateTime|null
      */
-    public function getLockedTime(): ?int
+    public function getLockedTime(): ?DateTime
     {
         return $this->lockedTime;
     }

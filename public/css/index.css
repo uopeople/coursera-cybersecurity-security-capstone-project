@@ -32,3 +32,8 @@
     padding: 1em;
     border: 1px solid black;
 }
+
+.container.main {
+    max-width: 1000px;
+    margin: auto;
+}
