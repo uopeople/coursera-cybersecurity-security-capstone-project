@@ -3,6 +3,7 @@
 
 namespace lib\db;
 
+use Exception;
 use lib\model\Message;
 use PDO;
 
@@ -17,7 +18,11 @@ class Messages
      */
     private $pdo;
 
-
+    /**
+     * Messages constructor.
+     *
+     * @throws Exception
+     */
     public function __construct()
     {
         $this->pdo = Connection::get_db_pdo();
@@ -33,7 +38,7 @@ class Messages
     public function loadMessageById(int $messageId): ?Message
     {
         
-        $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE id = ?';
+        $sql = 'SELECT id, sender, recipient, title, message, date, read FROM messages WHERE id = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$messageId]);
         $message = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -48,44 +53,44 @@ class Messages
     /**
      * Returns messages whith the given sender.
      * 
-     * @param string $senderId
+     * @param int $senderId
      *
      * @return array
      */
-    public function loadMessagesBySender(int $senderId)
+    public function loadMessagesBySender(int $senderId): array
     {
-        $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE sender = ?';
+        $sql = 'SELECT id, sender, recipient, title, message, date, read FROM messages WHERE sender = ? ORDER BY date desc';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$senderId]);
         $messages = [];
         if ($stmt->execute()) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $mesages[] =  $this->createMessageEntityFromDbRecord($row);
+                $messages[] =  $this->createMessageEntityFromDbRecord($row);
             }
         }
-        return $mesages;
-}
+        return $messages;
+    }
     
 
    /**
      * Returns messages whith the given recipient.
      * 
-     * @param string $recipientId
+     * @param int $recipientId
      *
      * @return array
      */
     public function loadMessagesByRecipient(int $recipientId)
     {
-        $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE recipient = ?';
+        $sql = 'SELECT id, sender, recipient, title, message, date, read FROM messages WHERE recipient = ? ORDER BY date desc';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$recipientId]);
         $messages = [];
         if ($stmt->execute()) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $mesages[] =  $this->createMessageEntityFromDbRecord($row);
+                $messages[] =  $this->createMessageEntityFromDbRecord($row);
             }
         }
-        return $mesages;
+        return $messages;
     }
 
    

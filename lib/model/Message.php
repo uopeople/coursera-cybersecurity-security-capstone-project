@@ -21,7 +21,7 @@ class Message
     private $sender;
 
     /**
-     * @var string
+     * @var int
      */
     private $recipient;
 
@@ -46,18 +46,11 @@ class Message
      */
     private $messageDate;
 
-    /**
-     * @param int $id
-     * @param int $sender
-     * @param int $recipient
-     * @param string $message
-     * @param string $messageDate
-     * @param bool $read
-     */
     public function __construct(
         int $id,
         int $sender,
         int $recipient,
+        string $title,
         string $message,
         string $messageDate,
         bool $read
@@ -66,6 +59,7 @@ class Message
         $this->id = $id;
         $this->sender = $sender;
         $this->recipient = $recipient;
+        $this->title = $title;
         $this->message = $message;
         $this->messageDate = $messageDate;
         $this->read = $read;

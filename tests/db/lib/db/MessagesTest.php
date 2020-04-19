@@ -8,6 +8,7 @@ use Exception;
 use lib\db\Connection;
 use lib\db\Messages;
 use lib\db\Users;
+use lib\model\Message;
 use lib\model\User;
 use PHPUnit\Framework\TestCase;
 
@@ -25,12 +26,23 @@ class MessagesTest extends TestCase
     private $recipient;
 
     /**
+     * The system under test.
+     *
+     * @var Messages
+     */
+    private $messages;
+
+    /**
      * @before
      * @throws Exception
      */
     public function setupDatabase()
     {
         $pdo = Connection::get_db_pdo();
+
+        // need to delete messages first, because of foreign key constraints.
+        $stmt = $pdo->prepare('DELETE FROM messages');
+        $stmt->execute();
 
         // clear users
         $stmt = $pdo->prepare('DELETE FROM users;');
@@ -43,12 +55,13 @@ class MessagesTest extends TestCase
 
         $this->sender = $users->loadUserByUsername('peter');
         $this->recipient = $users->loadUserByUsername('lisa');
+
+        $this->messages = new Messages();
     }
 
     public function test_insert_new_message_works()
     {
-        $messages = new Messages();
-        $ok = $messages->insertNewMessage(
+        $ok = $this->messages->insertNewMessage(
             $this->sender->getId(),
             $this->recipient->getId(),
             'Hi joe',
@@ -59,4 +72,101 @@ class MessagesTest extends TestCase
         $this->assertTrue($ok);
     }
 
+    public function test_loadMessageById_returns_the_message()
+    {
+        $ok = $this->messages->insertNewMessage(
+            $this->sender->getId(),
+            $this->recipient->getId(),
+            'Hi joe',
+            'test-message',
+            '2020-03-03 10:10:10',
+            false
+        );
+        $this->assertTrue($ok);
+
+        // This must be the only message in the db, since we cleared the table in `setupDatabase`.
+        // Find out the message id
+        $pdo = Connection::get_db_pdo();
+        $stmt = $pdo->prepare('SELECT id FROM messages');
+        $stmt->execute();
+
+        $msgId = $stmt->fetchColumn(0);
+
+        $this->assertNotNull($msgId);
+        $this->assertNotFalse($msgId);
+
+        $message = $this->messages->loadMessageById($msgId);
+        $this->assertNotNull($message);
+        $this->assertSame('Hi joe', $message->getTitle());
+    }
+
+    public function test_loadMessageById_returns_null_if_message_does_not_exist()
+    {
+        // messages table is empty at the beginning
+        $message = $this->messages->loadMessageById(7);
+        $this->assertNull($message);
+    }
+
+    public function test_loadMessagesBySender_returns_list_of_messages_with_matching_sender()
+    {
+        $this->insert3Messages();
+
+        $result = $this->messages->loadMessagesBySender($this->sender->getId());
+        $titles = array_map(function (Message $m) { return $m->getTitle(); }, $result);
+
+        // expect result ordered by date descending; so message 3, then message 1
+        $this->assertEquals(['message 3', 'message 1'], $titles);
+    }
+
+    public function test_loadMessagesByRecipient_returns_list_of_messages_with_matching_recipient()
+    {
+        $this->insert3Messages();
+
+        $result = $this->messages->loadMessagesByRecipient($this->recipient->getId());
+        $titles = array_map(function (Message $m) { return $m->getTitle(); }, $result);
+
+        // expect result ordered by date descending; so message 3, then message 1
+        $this->assertEquals(['message 3', 'message 1'], $titles);
+
+        // check messages to 'sender'
+        $msgToSender = $this->messages->loadMessagesByRecipient($this->sender->getId());
+        $titles = array_map(function (Message $m) { return $m->getTitle(); }, $msgToSender);
+        $this->assertEquals(['message 2'], $titles);
+    }
+
+    private function insert3Messages()
+    {
+        // message 1 from sender to recipient
+        $ok = $this->messages->insertNewMessage(
+            $this->sender->getId(),
+            $this->recipient->getId(),
+            'message 1',
+            'test-message',
+            '2020-03-03 10:10:10',
+            false
+        );
+        $this->assertTrue($ok, 'failed inserting message 1');
+
+        // message 2 has another sender ($this->recipient) !
+        $ok = $this->messages->insertNewMessage(
+            $this->recipient->getId(),
+            $this->sender->getId(),
+            'message 2',
+            'test-message',
+            '2020-03-03 10:11:10',
+            false
+        );
+        $this->assertTrue($ok, 'failed inserting message 2');
+
+        // message 3 is from sender to recipient again
+        $ok = $this->messages->insertNewMessage(
+            $this->sender->getId(),
+            $this->recipient->getId(),
+            'message 3',
+            'test-message',
+            '2020-03-03 10:12:10',
+            false
+        );
+        $this->assertTrue($ok, 'failed inserting message 3');
+    }
 }
