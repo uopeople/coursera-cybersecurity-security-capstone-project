@@ -3,8 +3,14 @@
 
 namespace lib\db;
 
+use DateTime;
+use DateTimeZone;
+use Exception;
 use lib\model\User;
+use lib\utils\Clock;
+use lib\utils\ClockImpl;
 use PDO;
+use PDOException;
 
 /**
  * Access to database table 'users'
@@ -17,10 +23,15 @@ class Users
      */
     private $pdo;
 
+    /**
+     * @var Clock
+     */
+    private $clock;
 
-    public function __construct()
+    public function __construct(PDO $pdo, ?Clock $clock = null)
     {
-        $this->pdo = Connection::get_db_pdo();
+        $this->clock = $clock ?? new ClockImpl();
+        $this->pdo = $pdo;
     }
 
     /**
@@ -91,47 +102,31 @@ class Users
      * Locks the user (sets 'locked_time' to current timestamp).
      * The 'login_attempts' counter will be reset to 0.
      *
-     * @param int $userId
+     * @param int    $userId
      *
-     * @throws \Exception
+     * @param string $requestIp
+     *
+     * @throws Exception
      */
-    public function lockUser(int $userId)
+    public function lockUser(int $userId, string $requestIp)
     {
-        $sql = 'UPDATE users SET login_attempts = 0, locked_time = ? WHERE id = ?';
+        $sql = 'UPDATE users SET login_attempts = 0, locked_time = ?, login_ip = ? WHERE id = ?';
         // Note: we generate the time via PHP, not SQL.
         // Times may differ (slightly) between SQL and PHP server.
         // When we decide if a user is allowed to login again, we use PHP to get the current time.
         // Because of this, it's more robust if we also use PHP when storing the 'locked_time'.
-        $now = time();
+        $now = new DateTime();
+        $now->setTimestamp($this->clock->getCurrentTimestamp());
+        $now->setTimezone(new DateTimeZone('UTC'));
+        $nowStr = $now->format(DbUtils::SQL_DATE_TIME_FORMAT);
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$now, $userId]);
+        $stmt->execute([$nowStr, $requestIp, $userId]);
         $updatedRows = $stmt->rowCount();
         if ($updatedRows !== 1) {
-            throw new \Exception('Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement');
+            throw new Exception(
+                'Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement'
+            );
         }
-    }
-
-    /**
-     * Checks if a given user is locked or not.
-     *
-     * @param User $user The user that should be checked. Can be loaded via `loadUserByUsername` or similar methods.
-     * @param int  $lockDurationSeconds The time in seconds, after which a locked user is unlocked again.
-     *
-     * @return bool
-     */
-    public function isUserLocked(User $user, int $lockDurationSeconds)
-    {
-        $now = time();
-        $userLockedSince = $user->getLockedTime();
-        if ($userLockedSince === null) {
-            // user is not locked
-            return false;
-        }
-        if ($userLockedSince + $lockDurationSeconds < $now) {
-            // user was locked, but lock duration has expired...
-            return false;
-        }
-        return true;
     }
 
     public function registerNewUser(string $username, string $email, string $cleartextPassword)
@@ -152,61 +147,53 @@ class Users
                 return false;
             }
             return true;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return false;
         }
     }
 
     /**
-     * @param int $userId
+     * @param int    $userId
      *
-     * @throws \Exception
+     * @param string $requestIp
+     *
+     * @throws Exception
      */
-    public function incrementLoginAttempts(int $userId)
+    public function incrementLoginAttempts(int $userId, string $requestIp)
     {
-        $sql = 'UPDATE users SET login_attempts = login_attempts + 1 WHERE id = ?';
+        // This statement *increments* the login_attempts counter ONLY if the login_ip matches the $requestIp.
+        // If the login_ip differs from $requestIp, we assume the previous client gave up, and use login_ip field
+        // for a new counter for the $requestIp... (starting at 1)
+        $sql = 'UPDATE users SET login_attempts = login_attempts + 1 WHERE id = ? AND login_ip = ?';
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$userId]);
+        $stmt->execute([$userId, $requestIp]);
         $updatedRows = $stmt->rowCount();
+        if ($updatedRows === 0) {
+            // no match, start new counter for $requestIp
+            $sql = 'UPDATE users SET login_attempts = 1, login_ip = ? WHERE id = ?';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$requestIp, $userId]);
+            $updatedRows = $stmt->rowCount();
+        }
         if ($updatedRows !== 1) {
-            throw new \Exception('Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement');
+            throw new Exception(
+                'Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement'
+            );
         }
     }
 
     /**
-     * This function loads the user with the given $username, then validates the $cleartextPassword against the password hash
-     * stored for that user. If the password matches, the user is returned. Otherwise the login_attempts counter will be
-     * incremented. If the counter was already at value 2 (i.e. this was the 3rd login attempt), then the user gets locked out
-     * for some time.
+     * Reset the login attempt counter.
      *
-     * @param string $username
-     * @param string $cleartextPassword
+     * This can be called after a successful login.
      *
-     * @return User|null
-     * @throws \Exception
+     * @param int $userId
      */
-    public function loginByUsername(string $username, string $cleartextPassword): ?User
+    public function resetLoginAttemptsCounter(int $userId)
     {
-        $user = $this->loadUserByUsername($username);
-        if ($user === null) {
-            // User does not exist.
-            // To hide the information, whether or not the user exists, do a password_hash, to have similar response_time compared to the other
-            // branch.
-            password_hash($cleartextPassword, PASSWORD_DEFAULT); // ignore result
-            return null;
-        }
-        $ok = password_verify($cleartextPassword, $user->getPassword());
-        if ($ok) {
-            return $user;
-        } else {
-            $loginAttempts = $user->getLoginAttempts() + 1;
-            if ($loginAttempts >= 3) {
-                $this->lockUser($user->getId());
-            } else {
-                $this->incrementLoginAttempts($user->getId());
-            }
-            return null;
-        }
+        $sql = 'UPDATE users SET login_attempts = 0, locked_time = NULL, login_ip = NULL WHERE id = ?';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$userId]);
     }
 
     private function createUserEntityFromDbRecord(array $dbRecord): User
@@ -215,9 +202,15 @@ class Users
         if ($pwReset !== null) {
             $pwReset = boolval($pwReset);
         }
-        $lockedTime = $dbRecord['locked_time'];
-        if ($lockedTime !== null) {
-            $lockedTime = intval($lockedTime);
+        $lockedTimeStr = $dbRecord['locked_time'];
+        if ($lockedTimeStr !== null) {
+            $lockedTime = DateTime::createFromFormat(
+                DbUtils::SQL_DATE_TIME_FORMAT,
+                $lockedTimeStr,
+                new DateTimeZone('UTC')
+            );
+        } else {
+            $lockedTime = null;
         }
         return new User(
             intval($dbRecord['id']),

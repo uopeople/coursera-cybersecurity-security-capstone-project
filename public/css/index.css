@@ -124,3 +124,8 @@ form {
 .form-container button:hover {
     opacity: 1;
 }
+
+.container.main {
+    max-width: 1000px;
+    margin: auto;
+}
