@@ -59,6 +59,7 @@ use lib\db\Messages;
                 <th>Read</th>
             </tr>
             <?php
+               $i = 0;
                while ($i < count($inboxMessages)) {
                    $message = $inboxMessages[$i];
                    echo "<tr>";

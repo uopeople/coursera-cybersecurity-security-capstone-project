@@ -2,6 +2,9 @@
 <html lang=en>
 
 <?php
+
+use lib\db\Messages;
+
 include __DIR__ . '/../setup.php';
 ?>
 
@@ -32,9 +35,6 @@ include __DIR__ . '/../setup.php';
             </div>
             <div>
             <?php
-            use lib\model\Messages;
-            use lib\db\Messages;
-            use PDO;
             if (isset($_SESSION['user']))
             {
                 $user = $_SESSION["user"];
@@ -59,7 +59,8 @@ include __DIR__ . '/../setup.php';
                 <th>Read</th>
             </tr>
             <?php
-               while ($i < count($inboxMessages)) {
+            $i = 0;
+            while ($i < count($inboxMessages)) {
                    $message = $inboxMessages[$i];
                    echo "<tr>";
                    echo "<td>".htmlspecialchars($message->id)."</td>";
