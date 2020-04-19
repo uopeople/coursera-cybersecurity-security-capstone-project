@@ -187,9 +187,9 @@ class Users
      */
     public function resetLoginAttemptsCounter(int $userId)
     {
-        $sql = 'UPDATE users SET login_attempts = ?, locked_time = NULL, login_ip = NULL WHERE id = ?';
+        $sql = 'UPDATE users SET login_attempts = 0, locked_time = NULL, login_ip = NULL WHERE id = ?';
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([0, $userId]);
+        $stmt->execute([$userId]);
     }
 
     private function createUserEntityFromDbRecord(array $dbRecord): User
