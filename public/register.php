@@ -1,11 +1,23 @@
 <?php
 include __DIR__ . '/../setup.php';
 
-use lib\db\register_post;
+use lib\db\Connection;
+use lib\db\Users;
+use lib\service\RegistrationFormValidation;
 
 // Register user on submission of the form.
 if(isset($_POST['register-submit'])) {
-    register_post::handle_registration();
+    if (RegistrationFormValidation::validate_values()) {
+        $pdo = Connection::get_db_pdo();
+        $users = new Users($pdo);
+        $ok = $users->registerNewUser($_POST["username"], $_POST["email"], $_POST["password"]);
+        if ($ok) {
+            header("Location: /login.php", true, 303);
+            exit();
+        } else {
+            $registrationErr = "Registration failed. Please try again later.";
+        }
+    }
 }
 ?>
 
@@ -41,30 +53,30 @@ if(isset($_POST['register-submit'])) {
             <i class="fa fa-user icon"></i>
             <input class="input-field" type="text" name="username"
                    placeholder="Username"
-                   value="<?php echo register_post::$username;?>">
-            <span class="error"><?php echo register_post::$usernameErr;?></span>
+                   value="<?php echo RegistrationFormValidation::$username;?>">
+            <span class="error"><?php echo RegistrationFormValidation::$usernameErr;?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-envelope icon"></i>
             <input class="input-field" type="email" name="email"
                    placeholder="Email"
-                   value="<?php echo register_post::$email;?>">
-            <span class="error"><?php echo register_post::$emailErr;?></span>
+                   value="<?php echo RegistrationFormValidation::$email;?>">
+            <span class="error"><?php echo RegistrationFormValidation::$emailErr;?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-key icon"></i>
             <input class="input-field" type="password" name="password"
                    placeholder="Password">
-            <span class="error"><?php echo register_post::$passErr;?></span>
+            <span class="error"><?php echo RegistrationFormValidation::$passErr;?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-key icon"></i>
             <input class="input-field" type="password" name="password-repeat"
                    placeholder="Repeat password">
-            <span class="error"><?php echo register_post::$passRptErr;?></span>
+            <span class="error"><?php echo RegistrationFormValidation::$passRptErr;?></span>
         </div>
 
         <div class="form-container">
@@ -75,7 +87,7 @@ if(isset($_POST['register-submit'])) {
 
         <div class="form-container">
             <span id="registration-error">
-                <?php echo register_post::$registrationErr;?>
+                <?php echo $registrationErr;?>
             </span>
         </div>
     </form>

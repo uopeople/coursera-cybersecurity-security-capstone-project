@@ -24,7 +24,7 @@
     </div>
     <div id="main-links">
         <p id="login">
-            <a href="login.php">
+            <a href="login.php" class="large-font">
                 <i class="fas fa-sign-in-alt icon"></i>&nbsp;Log in
             </a>
         </p>
