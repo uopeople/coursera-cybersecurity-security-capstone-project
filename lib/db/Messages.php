@@ -93,12 +93,18 @@ class Messages
     public function insertNewMessage(int $sender, int $recipient, string $title, string $message, string $date, bool $read)
     {
           
-        $sql = 'INSERT INTO messages (sender, recipient, title, message, date, read) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO messages (sender, recipient, title, message, date, read) VALUES (?, ?, ?, ?, ?, ?)';
 
        
         $stmt = $this->pdo->prepare($sql);
         try {
-            $stmt->execute([$sender, $recipient, $title, $message,$date,$read]);
+            $stmt->bindValue(1, $sender);
+            $stmt->bindValue(2, $recipient);
+            $stmt->bindValue(3, $title);
+            $stmt->bindValue(4, $message);
+            $stmt->bindValue(5, $date);
+            $stmt->bindValue(6, $read, PDO::PARAM_BOOL);
+            $stmt->execute();
             $cnt = $stmt->rowCount();
             if ($cnt < 1) {
                 return false;

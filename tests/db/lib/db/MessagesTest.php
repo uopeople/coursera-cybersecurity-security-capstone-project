@@ -51,6 +51,7 @@ class MessagesTest extends TestCase
         $ok = $messages->insertNewMessage(
             $this->sender->getId(),
             $this->recipient->getId(),
+            'Hi joe',
             'test-message',
             '2020-03-03 10:10:10',
             false
