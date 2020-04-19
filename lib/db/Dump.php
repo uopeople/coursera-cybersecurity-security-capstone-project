@@ -31,12 +31,10 @@ class Dump
    
     /**
      * Extract all rows from all table and write in csv file
-     *
-     * @param string $tableName
-     *
+     *   
      * @return string
      */
-    public function loadAllrowsFromAllTable()
+    public function loadAllrowsFromAllTables()
     {
         $this->loadAndDumpAllRowsFromTable("users");
         return $this->loadAndDumpAllRowsFromTable("message");
