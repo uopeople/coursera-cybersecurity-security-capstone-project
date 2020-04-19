@@ -1,5 +1,6 @@
 <?php
 
+use lib\db\Connection;
 use lib\db\Users;
 use lib\service\IpUtils;
 use lib\service\Logger;
@@ -14,12 +15,11 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST') {
 }
 
 try {
-    $users = new Users();
+    $pdo = Connection::get_db_pdo();
+    $users = new Users($pdo);
     $loginService = new LoginService($users, 60, 2);
     $result = $loginService->tryLogin($_POST['username'], $_POST['password'], IpUtils::getIp());
     if ($result->isSuccessful()) {
-        $_SESSION['is_authenticated'] = true;
-        $_SESSION['user'] = $result->getUser();
         // TODO redirect to inbox instead (after merging #14)
         header('Location: /index.php', 303);
     } else if ($result->isLocked()) {

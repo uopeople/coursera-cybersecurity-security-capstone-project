@@ -127,33 +127,6 @@ class Users
         }
     }
 
-    /**
-     * // TODO merge with impl in UserService, then move this to LoginService after merging #22 (which modifies this function)
-     * // TODO also check if request ip matches.
-     *
-     * Checks if a given user is locked or not.
-     *
-     * @param User $user                The user that should be checked. Can be loaded via `loadUserByUsername` or similar methods.
-     * @param int  $lockDurationSeconds The time in seconds, after which a locked user is unlocked again.
-     *
-     * @return bool
-     */
-    public function isUserLocked(User $user, int $lockDurationSeconds)
-    {
-        $now = time();
-        $userLockedSince = $user->getLockedTime();
-        if ($userLockedSince === null) {
-            // user is not locked
-            return false;
-        }
-        $lockedTimestamp = intval($userLockedSince->format('U'));
-        if ($lockedTimestamp + $lockDurationSeconds < $now) {
-            // user was locked, but lock duration has expired...
-            return false;
-        }
-        return true;
-    }
-
     public function registerNewUser(string $username, string $email, string $cleartextPassword)
     {
         $sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';

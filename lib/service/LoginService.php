@@ -3,7 +3,11 @@
 
 namespace lib\service;
 
+use Exception;
 use lib\db\Users;
+use lib\model\User;
+use lib\utils\Clock;
+use lib\utils\ClockImpl;
 
 class LoginService
 {
@@ -26,20 +30,37 @@ class LoginService
     private $dbUsers;
 
     /**
+     * @var Clock
+     */
+    private $clock;
+
+    /**
+     * @var SessionManager
+     */
+    private $sessionMgr;
+
+    /**
      * @param Users $dbUsers
+     * @param Clock $clock
      * @param int   $lockDurationSeconds
      * @param int   $maxNumOfLoginAttempts
      */
-    public function __construct(Users $dbUsers, int $lockDurationSeconds = 120, int $maxNumOfLoginAttempts = 5)
+    public function __construct(
+        Users $dbUsers,
+        ?SessionManager $sessionMgr = null,
+        ?Clock $clock = null,
+        int $lockDurationSeconds = 120,
+        int $maxNumOfLoginAttempts = 5
+    )
     {
         $this->dbUsers = $dbUsers;
+        $this->clock = $clock ?? new ClockImpl();
+        $this->sessionMgr = $sessionMgr ?? new SessionManagerPhp();
         $this->lockDurationSeconds = $lockDurationSeconds;
         $this->maxNumOfLoginAttempts = $maxNumOfLoginAttempts;
     }
 
     /**
-     * // TODO test this with a database "integration" test, after #22 got merged.
-     *
      * This function loads the user with the given $username, then validates the $cleartextPassword against the password hash
      * stored for that user. If the password matches, the user is returned.
      * Otherwise the login_attempts counter will be incremented for that user's IP address.
@@ -50,7 +71,7 @@ class LoginService
      * @param string $requestIp
      *
      * @return LoginResult
-     * @throws \Exception
+     * @throws Exception
      */
     public function tryLogin(string $username, string $cleartextPassword, string $requestIp): LoginResult
     {
@@ -62,8 +83,7 @@ class LoginService
             password_hash($cleartextPassword, PASSWORD_DEFAULT); // ignore result
             return LoginResult::createWrongCrendentialsResult();
         }
-        // TODO after merging #22: provide $requestIp
-        if ($this->dbUsers->isUserLocked($user, $this->lockDurationSeconds)) {
+        if ($this->isUserLocked($user, $requestIp)) {
             return LoginResult::createUserLockedResult();
         }
         $pwHash = $user->getPassword();
@@ -71,7 +91,8 @@ class LoginService
         if ($ok) {
             $this->dbUsers->resetLoginAttemptsCounter($user->getId());
             // best practice is to give the session a new id after successful login
-            session_regenerate_id();
+            $this->sessionMgr->regenerateId();
+            $this->sessionMgr->setAuthenticatedUser($user);
             return LoginResult::createSuccessfulResult($user);
         }
 
@@ -84,6 +105,55 @@ class LoginService
             $this->dbUsers->incrementLoginAttempts($user->getId(), $requestIp);
         }
         return LoginResult::createWrongCrendentialsResult();
+    }
+
+
+
+    /**
+     * Checks if a given user is locked or not.
+     *
+     * See issue #12.
+     *
+     * @param User   $user                The user that should be checked. Can be loaded via `loadUserByUsername` or similar methods.
+     * @param string $requestIpAddr       The client ip address of the http request.
+     *
+     * @return bool
+     */
+    public function isUserLocked(User $user, string $requestIpAddr)
+    {
+        $userLockedSince = $user->getLockedTime();
+        if ($userLockedSince === null) {
+            // user is not locked
+            return false;
+        }
+        // assuming, the user was locked in the past, $diffSeconds will be negative
+        $diffSeconds = $this->clock->diffSecondsToCurrentTime($userLockedSince);
+        if ($diffSeconds + $this->lockDurationSeconds <= 0) {
+            // user was locked, but lock duration has expired...
+            return false;
+        }
+        // User is locked. But maybe only locked for the attacker's IP; and now, the real user wants to access the account.
+        // We allows this, even if it is a trade-off.
+        // It means that an attacker can simply (in larger scale it's probably not so simple) change his IP and then retry.
+        // On the other hand, considering the IP prevents the attacker from intentionally locking accounts
+        // (which would be a kind of "denial of service").
+        $lockedFor = $user->getLoginIp();
+        if ($lockedFor === null) {
+            Logger::getInstance()->logMessage(
+                Logger::LEVEL_WARN,
+                'Locked account, but no IP is stored. Allow current request. User id: ' . $user->getId()
+            );
+        } else {
+            if ($requestIpAddr !== $lockedFor) {
+                // Locked only for someone else... log a message, since this could indicate malicious behavior.
+                Logger::getInstance()->logMessage(
+                    Logger::LEVEL_INFO,
+                    'Account was locked for other IP. Allow current request'
+                );
+                return false;
+            }
+        }
+        return true;
     }
 
 }
