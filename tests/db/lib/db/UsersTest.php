@@ -18,6 +18,11 @@ class UsersTest extends TestCase
     public function clearUserTable()
     {
         $pdo = Connection::get_db_pdo();
+
+        // need to delete messages first, because of foreign key constraints.
+        $stmt = $pdo->prepare('DELETE FROM messages');
+        $stmt->execute();
+
         $stmt = $pdo->prepare('DELETE FROM users;');
         $stmt->execute();
     }
