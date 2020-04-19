@@ -37,11 +37,11 @@ class Messages
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$messageId]);
         $message = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!message) {
+        if (!$message) {
             // not found
             return null;
         }
-        return $this->createMessageEntityFromDbRecord(message);
+        return $this->createMessageEntityFromDbRecord($message);
     }
 
 
@@ -50,7 +50,7 @@ class Messages
      * 
      * @param string $senderId
      *
-     * @return Message|null
+     * @return array
      */
     public function loadMessagesBySender(int $senderId)
     {
@@ -90,15 +90,15 @@ class Messages
 
    
 
-    public function insertNewMessage(int $sender, int $recipient, string $message, string $date, bool $read)
+    public function insertNewMessage(int $sender, int $recipient, string $title, string $message, string $date, bool $read)
     {
           
-        $sql = 'INSERT INTO messages (sender, recipient, message, date, read) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO messages (sender, recipient, title, message, date, read) VALUES (?, ?, ?, ?, ?)';
 
        
         $stmt = $this->pdo->prepare($sql);
         try {
-            $stmt->execute([$sender, $recipient, $message,$date,$read]);
+            $stmt->execute([$sender, $recipient, $title, $message,$date,$read]);
             $cnt = $stmt->rowCount();
             if ($cnt < 1) {
                 return false;
@@ -116,6 +116,7 @@ class Messages
             intval($dbRecord['id']),
             intval($dbRecord['sender']),
             intval($dbRecord['recipient']),
+            $dbRecord['title'],
             $dbRecord['message'],
             $dbRecord['date'],
             boolval($dbRecord['read'])
