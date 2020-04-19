@@ -31,7 +31,7 @@ class LoginServiceTest extends TestCase
         $usersDao = $this->createStub(Users::class);
 
         // system under test
-        $sut = new LoginService($usersDao, $clock, $lockDuration);
+        $sut = new LoginService($usersDao, null, $clock, $lockDuration);
 
         // the time when the user was locked.
         // Note: locked at time 50; plus 60 seconds lock duration, is > than 100 (current time).
@@ -54,7 +54,7 @@ class LoginServiceTest extends TestCase
         $clock = new ClockStub($now);
         $usersDao = $this->createStub(Users::class);
 
-        $sut = new LoginService($usersDao, $clock, $lockDuration);
+        $sut = new LoginService($usersDao, null, $clock, $lockDuration);
 
         $lockedTime = new DateTime();
         $lockedTime->setTimestamp(50);
@@ -73,7 +73,7 @@ class LoginServiceTest extends TestCase
         $clock = new ClockStub($now);
         $usersDao = $this->createStub(Users::class);
 
-        $sut = new LoginService($usersDao, $clock, $lockDuration);
+        $sut = new LoginService($usersDao, null, $clock, $lockDuration);
 
         // lockedTime + lockDuration = 50 + 60 = 110 < 200 (current time)
         $lockedTime = new DateTime();
