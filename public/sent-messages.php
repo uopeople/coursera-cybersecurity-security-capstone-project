@@ -2,10 +2,10 @@
 <html lang=en>
 
 <?php
-include __DIR__ . '/../setup.php';
 
 use lib\db\Messages;
 
+include __DIR__ . '/../setup.php';
 ?>
 
 <head>
@@ -40,13 +40,13 @@ use lib\db\Messages;
                 $user = $_SESSION["user"];
                 $userid = $user->getId();
                 $message = new Messages();
-                $inboxMessages = $message->loadMessagesByRecipient($userid);
+                $inboxMessages = $message->loadMessagesBySender($userid);
             }
             else 
             {
                 header('Location: /login.php', true, 303);
                 exit();
-            }       
+            }
             
            ?>
         <table>
@@ -59,8 +59,8 @@ use lib\db\Messages;
                 <th>Read</th>
             </tr>
             <?php
-               $i = 0;
-               while ($i < count($inboxMessages)) {
+            $i = 0;
+            while ($i < count($inboxMessages)) {
                    $message = $inboxMessages[$i];
                    echo "<tr>";
                    echo "<td>".htmlspecialchars($message->id)."</td>";
