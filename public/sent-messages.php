@@ -43,8 +43,10 @@ include __DIR__ . '/../setup.php';
                 $inboxMessages = $message->loadMessagesBySender($userid);
             }
             else 
-            header('Location: /login.php', true, 303);
-            
+            {
+                header('Location: /login.php', true, 303);
+                exit();
+            }
             
            ?>
         <table>
