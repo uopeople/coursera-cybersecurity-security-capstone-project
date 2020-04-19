@@ -10,7 +10,6 @@ use lib\components\Banner;
 
 <body>
 <div class="page">
-    <?php include __DIR__ . '/icons.php'; ?>
 
     <?= Banner::renderAppBanner($pageTitle); ?>
 

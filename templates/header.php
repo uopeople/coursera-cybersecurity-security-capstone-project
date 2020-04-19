@@ -25,7 +25,7 @@ use lib\components\AppInfo;
     <link rel="stylesheet" media="all" href="<?= AppInfo::urlCss('index.css') ?>">
 
     <!-- Fonts -->
-    <!-- TODO remove this CDN resource. Copy all icons we need as SVG to templates/icons.php. We probably need only a few icons, so the icons can be included directly on the page. -->
+    <!-- TODO discuss if we want to rely on this CDN resource. Alternative: copy all icons we need as SVG to templates/icons.php. We probably need only a few icons, so the icons can be included directly on the page. -->
     <!-- To include, use <svg class="icon"><use xlink:href="#the-icon-id"></svg>; (see templates/pages/index.php as example) -->
     <link rel=stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
