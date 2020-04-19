@@ -35,10 +35,16 @@ include __DIR__ . '/../setup.php';
             use lib\model\Messages;
             use lib\db\Messages;
             use PDO;
-            $user = $_SESSION["user"];
-            $userid = $user ->getId();
-            $message = new Messages();
-            $inboxMessages = $message -> loadMessagesByRecipient($userid);
+            if (isset($_SESSION['user']))
+            {
+                $user = $_SESSION["user"];
+                $userid = $user->getId();
+                $message = new Messages();
+                $inboxMessages = $message->loadMessagesByRecipient($userid);
+            }
+            else 
+            header('Location: /login.php', true, 303);
+            
             
            ?>
         <table>
@@ -54,12 +60,12 @@ include __DIR__ . '/../setup.php';
                while ($i < count($inboxMessages)) {
                    $message = $inboxMessages[$i];
                    echo "<tr>";
-                   echo "<td>".$message->id."</td>";
-                   echo "<td>".$message->sender."</td>";
-                   echo "<td>".$message->recipient."</td>";
-                   echo "<td>".$message->message."</td>";
-                   echo "<td>".$message->messageDate."</td>";
-                   echo "<td>".$message->read."</td>";
+                   echo "<td>".htmlspecialchars($message->id)."</td>";
+                   echo "<td>".htmlspecialchars($message->sender)."</td>";
+                   echo "<td>".htmlspecialchars($message->recipient)."</td>";
+                   echo "<td>".htmlspecialchars($message->message)."</td>";
+                   echo "<td>".htmlspecialchars($message->messageDate)."</td>";
+                   echo "<td>".htmlspecialchars($message->read)."</td>";
                    echo "</tr>";
                    $i++;
                }
