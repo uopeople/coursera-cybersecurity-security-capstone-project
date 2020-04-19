@@ -44,16 +44,6 @@ class User extends UserInfo
      */
     private $lockedTime;
 
-    /**
-     * @param int      $id
-     * @param string   $username
-     * @param string   $email
-     * @param string   $password
-     * @param string   $loginIp
-     * @param int      $loginAttempts
-     * @param DateTime $lockedTime
-     * @param bool     $passwordReset
-     */
     public function __construct(
         int $id,
         string $username,

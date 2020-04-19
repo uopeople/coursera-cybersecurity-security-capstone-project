@@ -21,7 +21,7 @@ try {
     $result = $loginService->tryLogin($_POST['username'], $_POST['password'], IpUtils::getIp());
     if ($result->isSuccessful()) {
         // TODO redirect to inbox instead (after merging #14)
-        header('Location: /index.php', 303);
+        header('Location: /index.php', true, 303);
     } else if ($result->isLocked()) {
         $message = 'Your Account has been locked, because of too many failed login attempts. Please wait 2 minute';
         include BASE_DIR . '/templates/login_failed.php';

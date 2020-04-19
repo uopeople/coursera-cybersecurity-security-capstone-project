@@ -39,12 +39,6 @@ class LoginService
      */
     private $sessionMgr;
 
-    /**
-     * @param Users $dbUsers
-     * @param Clock $clock
-     * @param int   $lockDurationSeconds
-     * @param int   $maxNumOfLoginAttempts
-     */
     public function __construct(
         Users $dbUsers,
         ?SessionManager $sessionMgr = null,
@@ -69,12 +63,12 @@ class LoginService
      *
      * @param string $username
      * @param string $cleartextPassword
-     * @param string $requestIp
+     * @param string|null $requestIp
      *
      * @return LoginResult
      * @throws Exception
      */
-    public function tryLogin(string $username, string $cleartextPassword, string $requestIp): LoginResult
+    public function tryLogin(string $username, string $cleartextPassword, ?string $requestIp): LoginResult
     {
         $user = $this->dbUsers->loadUserByUsername($username);
         if ($user === null) {
@@ -118,11 +112,11 @@ class LoginService
      *
      * @param User $user The user that should be checked. Can be loaded via `loadUserByUsername`
      *                   or similar methods.
-     * @param string $requestIpAddr       The client ip address of the http request.
+     * @param string | null $requestIpAddr       The client ip address of the http request.
      *
      * @return bool
      */
-    public function isUserLocked(User $user, string $requestIpAddr)
+    public function isUserLocked(User $user, ?string $requestIpAddr)
     {
         $userLockedSince = $user->getLockedTime();
         if ($userLockedSince === null) {

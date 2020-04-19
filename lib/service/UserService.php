@@ -5,7 +5,6 @@ namespace lib\service;
 
 
 use lib\db\Users;
-use lib\model\User;
 use lib\utils\Clock;
 
 class UserService
