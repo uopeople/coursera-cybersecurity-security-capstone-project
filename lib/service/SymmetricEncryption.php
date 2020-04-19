@@ -46,6 +46,21 @@ class SymmetricEncryption
     }
 
     /**
+     * Creates a new instance, initialized with a password read from the env variable  `MESSAGE_ENCRYPTION_PASSWORD`.
+     *
+     * @return SymmetricEncryption
+     * @throws Exception If the environment has no password variable, or the server does not support the cipher.
+     */
+    public static function fromEnvironment(): SymmetricEncryption
+    {
+        $password = getenv('MESSAGE_ENCRYPTION_PASSWORD');
+        if (!$password) {
+            throw new Exception('Bad configuration: Missing password for message encryption');
+        }
+        return new SymmetricEncryption($password);
+    }
+
+    /**
      * @param string $plaintext
      *
      * @return string
@@ -73,15 +88,15 @@ class SymmetricEncryption
     }
 
     /**
-     * @param $encodedCipher
+     * @param string $encodedCiphertext
      *
      * @return string
      * @throws Exception
      */
-    public function decrypt($encodedCipher)
+    public function decrypt(string $encodedCiphertext)
     {
         // decode parts first
-        $parts = explode('$', $encodedCipher, 4);
+        $parts = explode('$', $encodedCiphertext, 4);
         $salt = hex2bin($parts[0]);
         $iv = hex2bin($parts[1]);
         $tag = hex2bin($parts[2]);

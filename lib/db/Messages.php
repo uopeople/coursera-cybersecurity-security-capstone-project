@@ -55,7 +55,7 @@ class Messages
      * 
      * @param int $senderId
      *
-     * @return array
+     * @return Message[]
      */
     public function loadMessagesBySender(int $senderId): array
     {
@@ -77,9 +77,9 @@ class Messages
      * 
      * @param int $recipientId
      *
-     * @return array
+     * @return Message[]
      */
-    public function loadMessagesByRecipient(int $recipientId)
+    public function loadMessagesByRecipient(int $recipientId): array
     {
         $sql = 'SELECT id, sender, recipient, title, message, date, read FROM messages WHERE recipient = ? ORDER BY date desc';
         $stmt = $this->pdo->prepare($sql);

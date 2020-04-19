@@ -1,12 +1,29 @@
-<!DOCTYPE html>
-<html lang=en>
-
 <?php
+include __DIR__ . '/../setup.php';
 
 use lib\db\Messages;
+use lib\service\SymmetricEncryption;
 
-include __DIR__ . '/../setup.php';
+if (!isset($_SESSION['user'])) {
+    header('Location: /login.php', true, 303);
+    exit();
+}
+
+$user = $_SESSION["user"];
+$userid = $user->getId();
+$message = new Messages();
+$boxMessages = $message->loadMessagesBySender($userid);
+
+try {
+    $encryption = SymmetricEncryption::fromEnvironment();
+} catch (Exception $e) {
+    echo 'Internal Server Error';
+    http_response_code(500);
+}
+
 ?>
+<!DOCTYPE html>
+<html lang=en>
 
 <head>
     <meta http-equiv=Content-Type content="text/html; charset=utf-8">
@@ -34,45 +51,34 @@ include __DIR__ . '/../setup.php';
                 <a href="write_message.php">Create New Message</a> <!-- review write_message page address -->
             </div>
             <div>
-            <?php
-            if (isset($_SESSION['user']))
-            {
-                $user = $_SESSION["user"];
-                $userid = $user->getId();
-                $message = new Messages();
-                $inboxMessages = $message->loadMessagesBySender($userid);
-            }
-            else 
-            {
-                header('Location: /login.php', true, 303);
-                exit();
-            }
-            
-           ?>
         <table>
             <tr>
                 <th>Id</th>
                 <th>Sender</th>
                 <th>Recipient</th>
+                <th>Title</th>
                 <th>Message</th>
                 <th>Date</th>
                 <th>Read</th>
             </tr>
             <?php
-            $i = 0;
-            while ($i < count($inboxMessages)) {
-                   $message = $inboxMessages[$i];
-                   echo "<tr>";
-                   echo "<td>".htmlspecialchars($message->id)."</td>";
-                   echo "<td>".htmlspecialchars($message->sender)."</td>";
-                   echo "<td>".htmlspecialchars($message->recipient)."</td>";
-                   echo "<td>".htmlspecialchars($message->message)."</td>";
-                   echo "<td>".htmlspecialchars($message->messageDate)."</td>";
-                   echo "<td>".htmlspecialchars($message->read)."</td>";
-                   echo "</tr>";
-                   $i++;
-               }
-
+            foreach ($boxMessages as $message) {
+                try {
+                    $msgContent = $encryption->decrypt($message->getMessage());
+                    $msgTitle = $encryption->decrypt($message->getTitle());
+                    echo "<tr>";
+                    echo "<td>".htmlspecialchars($message->getId())."</td>";
+                    echo "<td>".htmlspecialchars($message->getSender())."</td>";
+                    echo "<td>".htmlspecialchars($message->getRecipient())."</td>";
+                    echo "<td>".htmlspecialchars($msgTitle)."</td>";
+                    echo "<td>".htmlspecialchars($msgContent)."</td>";
+                    echo "<td>".htmlspecialchars($message->getMessageDate())."</td>";
+                    echo "<td>". ($message->isRead() ? '' : 'new') ."</td>";
+                    echo "</tr>";
+                } catch (Exception $e) {
+                    error_log('Failed to decrypt message ' . $message->getId());
+                }
+            }
             ?>
         </table>
             </div>
