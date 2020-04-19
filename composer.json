@@ -10,5 +10,13 @@
         "psr-4": {
             "lib\\": "lib/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.1"
     }
 }
