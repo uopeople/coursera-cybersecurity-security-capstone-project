@@ -3,6 +3,7 @@
 
 namespace lib\db;
 
+use Exception;
 use lib\model\Message;
 use PDO;
 
@@ -17,7 +18,11 @@ class Messages
      */
     private $pdo;
 
-
+    /**
+     * Messages constructor.
+     *
+     * @throws Exception
+     */
     public function __construct()
     {
         $this->pdo = Connection::get_db_pdo();
@@ -33,72 +38,78 @@ class Messages
     public function loadMessageById(int $messageId): ?Message
     {
         
-        $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE id = ?';
+        $sql = 'SELECT id, sender, recipient, title, message, date, read FROM messages WHERE id = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$messageId]);
         $message = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!message) {
+        if (!$message) {
             // not found
             return null;
         }
-        return $this->createMessageEntityFromDbRecord(message);
+        return $this->createMessageEntityFromDbRecord($message);
     }
 
 
     /**
      * Returns messages whith the given sender.
      * 
-     * @param string $senderId
+     * @param int $senderId
      *
-     * @return Message|null
+     * @return array
      */
-    public function loadMessagesBySender(int $senderId)
+    public function loadMessagesBySender(int $senderId): array
     {
-        $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE sender = ?';
+        $sql = 'SELECT id, sender, recipient, title, message, date, read FROM messages WHERE sender = ? ORDER BY date desc';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$senderId]);
         $messages = [];
         if ($stmt->execute()) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $mesages[] =  $this->createMessageEntityFromDbRecord($row);
+                $messages[] =  $this->createMessageEntityFromDbRecord($row);
             }
         }
-        return $mesages;
-}
+        return $messages;
+    }
     
 
    /**
      * Returns messages whith the given recipient.
      * 
-     * @param string $recipientId
+     * @param int $recipientId
      *
-     * @return Message|null
+     * @return array
      */
     public function loadMessagesByRecipient(int $recipientId)
     {
-        $sql = 'SELECT id, sender, recipient, message, date, read FROM messages WHERE recipient = ?';
+        $sql = 'SELECT id, sender, recipient, title, message, date, read FROM messages WHERE recipient = ? ORDER BY date desc';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$recipientId]);
         $messages = [];
         if ($stmt->execute()) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $mesages[] =  $this->createMessageEntityFromDbRecord($row);
+                $messages[] =  $this->createMessageEntityFromDbRecord($row);
             }
         }
-        return $mesages;
+        return $messages;
     }
 
    
 
-    public function insertNewMessage(int $sender, int $recipient, string $message, string $date, bool $read)
+    public function insertNewMessage(int $sender, int $recipient, string $title, string $message, string $date, bool $read)
     {
           
-        $sql = 'INSERT INTO messages (sender, recipient, message, date, read) VALUES (?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO messages (sender, recipient, title, message, date, read) VALUES (?, ?, ?, ?, ?, ?)';
 
        
         $stmt = $this->pdo->prepare($sql);
         try {
-            $stmt->execute([$sender, $recipient, $message,$date,$read]);
+            $stmt->bindValue(1, $sender);
+            $stmt->bindValue(2, $recipient);
+            $stmt->bindValue(3, $title);
+            $stmt->bindValue(4, $message);
+            $stmt->bindValue(5, $date);
+            $stmt->bindValue(6, $read, PDO::PARAM_BOOL);
+            $stmt->execute();
             $cnt = $stmt->rowCount();
             if ($cnt < 1) {
                 return false;
@@ -116,6 +127,7 @@ class Messages
             intval($dbRecord['id']),
             intval($dbRecord['sender']),
             intval($dbRecord['recipient']),
+            $dbRecord['title'],
             $dbRecord['message'],
             $dbRecord['date'],
             boolval($dbRecord['read'])
