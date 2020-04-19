@@ -59,7 +59,7 @@ class Dump
     private function CreateOrAddToFileFromDbRecord(array $dbRecord, string $tableName): string
     {
         $filename= "dbdump.csv";
-        $myfile = fopen($filename, "a+") or die("Unable to open file!");
+        $myfile = fopen("../public/".$filename, "a+") or die("Unable to open file!");
         
         $i=0;
         fwrite($myfile, "DUMP TABLE ".$tableName."\n");
