@@ -61,7 +61,8 @@ class LoginService
     }
 
     /**
-     * This function loads the user with the given $username, then validates the $cleartextPassword against the password hash
+     * This function loads the user with the given $username, then validates the $cleartextPassword
+     * against the password hash
      * stored for that user. If the password matches, the user is returned.
      * Otherwise the login_attempts counter will be incremented for that user's IP address.
      * If the counter exceeds the max number of allowed login attempts, then the user gets locked for some time.
@@ -78,8 +79,8 @@ class LoginService
         $user = $this->dbUsers->loadUserByUsername($username);
         if ($user === null) {
             // User does not exist.
-            // To hide the information, whether or not the user exists, do a password_hash, to have similar response_time compared to the other
-            // branch.
+            // To hide the information, whether or not the user exists, do a password_hash,
+            // to have similar response_time compared to the other branch.
             password_hash($cleartextPassword, PASSWORD_DEFAULT); // ignore result
             return LoginResult::createWrongCrendentialsResult();
         }
@@ -98,7 +99,8 @@ class LoginService
 
         $loginAttempts = $user->getLoginAttempts() + 1;
         if ($loginAttempts >= $this->maxNumOfLoginAttempts) {
-            // Note: even if the user gets locked now, *this* request was denied because of wrong credentials, not locked user.
+            // Note: even if the user gets locked now, *this* request was denied
+            // because of wrong credentials, not locked user.
             // (The user sees the "you're locked out" message after the next attempt)
             $this->dbUsers->lockUser($user->getId(), $requestIp);
         } else {
@@ -114,7 +116,8 @@ class LoginService
      *
      * See issue #12.
      *
-     * @param User   $user                The user that should be checked. Can be loaded via `loadUserByUsername` or similar methods.
+     * @param User $user The user that should be checked. Can be loaded via `loadUserByUsername`
+     *                   or similar methods.
      * @param string $requestIpAddr       The client ip address of the http request.
      *
      * @return bool
@@ -132,9 +135,11 @@ class LoginService
             // user was locked, but lock duration has expired...
             return false;
         }
-        // User is locked. But maybe only locked for the attacker's IP; and now, the real user wants to access the account.
+        // User is locked. But maybe only locked for the attacker's IP; and now,
+        // the real user wants to access the account.
         // We allows this, even if it is a trade-off.
-        // It means that an attacker can simply (in larger scale it's probably not so simple) change his IP and then retry.
+        // It means that an attacker can simply (in larger scale it's probably not so simple) change his IP
+        // and then retry.
         // On the other hand, considering the IP prevents the attacker from intentionally locking accounts
         // (which would be a kind of "denial of service").
         $lockedFor = $user->getLoginIp();

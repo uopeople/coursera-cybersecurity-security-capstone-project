@@ -123,7 +123,9 @@ class Users
         $stmt->execute([$nowStr, $requestIp, $userId]);
         $updatedRows = $stmt->rowCount();
         if ($updatedRows !== 1) {
-            throw new Exception('Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement');
+            throw new Exception(
+                'Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement'
+            );
         }
     }
 
@@ -174,7 +176,9 @@ class Users
             $updatedRows = $stmt->rowCount();
         }
         if ($updatedRows !== 1) {
-            throw new Exception('Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement');
+            throw new Exception(
+                'Unexpected rowCount: ' . $updatedRows . ' were affected by the lockUser update statement'
+            );
         }
     }
 
