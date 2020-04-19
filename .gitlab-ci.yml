@@ -39,11 +39,10 @@ database_test:
     services:
         - name: postgres:12.2
           alias: db
-    before_script:
+    script:
         # install postgres driver
         - apk add postgresql-dev postgresql-client
         - "docker-php-ext-install pdo_pgsql > /dev/null"
-    script:
         # database tests
         - psql -q -f ./db/schema.sql -h db -p 5432 -U app app
         - ./vendor/bin/phpunit --testdox --bootstrap ./vendor/autoload.php --no-configuration ./tests/db
