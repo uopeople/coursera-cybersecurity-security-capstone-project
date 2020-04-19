@@ -49,12 +49,12 @@ include __DIR__ . '/../setup.php';
            ?>
         <table>
             <tr>
-                <td>Id</td>
-                <td>Sender</td>
-                <td>Recipient</td>
-                <td>Message</td>
-                <td>Date</td>
-                <td>Read</td>
+                <th>Id</th>
+                <th>Sender</th>
+                <th>Recipient</th>
+                <th>Message</th>
+                <th>Date</th>
+                <th>Read</th>
             </tr>
             <?php
                while ($i < count($inboxMessages)) {
