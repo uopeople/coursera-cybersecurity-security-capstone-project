@@ -7,6 +7,8 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use lib\model\User;
+use lib\utils\Clock;
+use lib\utils\ClockImpl;
 use PDO;
 use PDOException;
 
@@ -21,10 +23,15 @@ class Users
      */
     private $pdo;
 
+    /**
+     * @var Clock
+     */
+    private $clock;
 
-    public function __construct()
+    public function __construct(PDO $pdo, ?Clock $clock = null)
     {
-        $this->pdo = Connection::get_db_pdo();
+        $this->clock = $clock ?? new ClockImpl();
+        $this->pdo = $pdo;
     }
 
     /**
@@ -109,6 +116,7 @@ class Users
         // When we decide if a user is allowed to login again, we use PHP to get the current time.
         // Because of this, it's more robust if we also use PHP when storing the 'locked_time'.
         $now = new DateTime();
+        $now->setTimestamp($this->clock->getCurrentTimestamp());
         $now->setTimezone(new DateTimeZone('UTC'));
         $nowStr = $now->format('Y-m-d H:i:s');
         $stmt = $this->pdo->prepare($sql);
@@ -120,7 +128,7 @@ class Users
     }
 
     /**
-     * // TODO move this to LoginService after merging #22 (which modifies this function)
+     * // TODO merge with impl in UserService, then move this to LoginService after merging #22 (which modifies this function)
      * // TODO also check if request ip matches.
      *
      * Checks if a given user is locked or not.
