@@ -10,6 +10,7 @@ use lib\db\Messages;
 use lib\db\Users;
 use lib\model\Message;
 use lib\model\User;
+use lib\service\SymmetricEncryption;
 use PHPUnit\Framework\TestCase;
 
 class MessagesTest extends TestCase
@@ -56,7 +57,7 @@ class MessagesTest extends TestCase
         $this->sender = $users->loadUserByUsername('peter');
         $this->recipient = $users->loadUserByUsername('lisa');
 
-        $this->messages = new Messages();
+        $this->messages = new Messages($pdo, $this->createMock(SymmetricEncryption::class));
     }
 
     public function test_insert_new_message_works()
