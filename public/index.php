@@ -1,3 +1,17 @@
+<?php
+
+use lib\service\SessionManagerPhp;
+
+include __DIR__ . '/../setup.php';
+
+$sessMgr = new SessionManagerPhp();
+if ($sessMgr->getAuthenticatedUser()) {
+    // redirect to inbox
+    header('Location: /inbox.php', true, 303);
+    return;
+}
+
+?>
 <!DOCTYPE html>
 <html lang=en>
 

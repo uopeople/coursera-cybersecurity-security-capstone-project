@@ -1,6 +1,7 @@
 <?php
 include __DIR__ . '/../setup.php';
 
+use lib\db\Connection;
 use lib\db\Messages;
 use lib\service\SymmetricEncryption;
 
@@ -11,11 +12,11 @@ if (!isset($_SESSION['user'])) {
 
 $user = $_SESSION["user"];
 $userid = $user->getId();
-$message = new Messages();
-$boxMessages = $message->loadMessagesBySender($userid);
 
 try {
     $encryption = SymmetricEncryption::fromEnvironment();
+    $message = new Messages(Connection::get_db_pdo(), $encryption);
+    $boxMessages = $message->loadMessageViewsBySender($userid);
 } catch (Exception $e) {
     echo 'Internal Server Error';
     http_response_code(500);
@@ -43,45 +44,18 @@ try {
 
 <body>
 <div id="header">
-    <h1>Inbox</h1>
+    <h1>Sent messages</h1>
 </div>
 <div class="container main">
+    <div>
         <div>
-            <div>
-                <a href="write_message.php">Create New Message</a> <!-- review write_message page address -->
-            </div>
-            <div>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Sender</th>
-                <th>Recipient</th>
-                <th>Title</th>
-                <th>Message</th>
-                <th>Date</th>
-                <th>Read</th>
-            </tr>
-            <?php
-            foreach ($boxMessages as $message) {
-                try {
-                    $msgContent = $encryption->decrypt($message->getMessage());
-                    $msgTitle = $encryption->decrypt($message->getTitle());
-                    echo "<tr>";
-                    echo "<td>".htmlspecialchars($message->getId())."</td>";
-                    echo "<td>".htmlspecialchars($message->getSender())."</td>";
-                    echo "<td>".htmlspecialchars($message->getRecipient())."</td>";
-                    echo "<td>".htmlspecialchars($msgTitle)."</td>";
-                    echo "<td>".htmlspecialchars($msgContent)."</td>";
-                    echo "<td>".htmlspecialchars($message->getMessageDate())."</td>";
-                    echo "<td>". ($message->isRead() ? '' : 'new') ."</td>";
-                    echo "</tr>";
-                } catch (Exception $e) {
-                    error_log('Failed to decrypt message ' . $message->getId());
-                }
-            }
-            ?>
-        </table>
-            </div>
+            <a href="write_message.php">Create New Message</a> <!-- review write_message page address -->
+        </div>
+        <div>
+            <h2>Messages:</h2>
+            <?php include BASE_DIR . '/templates/messages_list.php'; ?>
+        </div>
+    </div>
 </body>
 
 </html>
