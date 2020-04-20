@@ -7,7 +7,8 @@ use lib\service\RegistrationFormValidation;
 
 // Register user on submission of the form.
 if(isset($_POST['register-submit'])) {
-    if (RegistrationFormValidation::validate_values()) {
+    if (RegistrationFormValidation::validateValues(
+            $_POST["username"], $_POST["email"], $_POST["password"], $_POST["password-repeat"])) {
         $pdo = Connection::get_db_pdo();
         $users = new Users($pdo);
         $ok = $users->registerNewUser($_POST["username"], $_POST["email"], $_POST["password"]);
