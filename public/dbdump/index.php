@@ -3,6 +3,9 @@ include __DIR__ . '/../../setup.php';
 
 use lib\db\Dump;
 
+$dump = new Dump();
+$files = $dump->loadAllRowsFromAllTables();
+
 ?>
 
 <html lang=en>
@@ -30,10 +33,26 @@ use lib\db\Dump;
 </div>
 <div class="container main">
     <h2>DB Dump</h2>
-    <?php
-        $dump = new Dump();
-        $filename = $dump->loadAllRowsFromAllTables();
-    ?>
+    <table>
+        <tr>
+            <th>Table</th>
+            <th>Data</th>
+        </tr>
+        <?php
+            foreach($files as $table => $file) {
+        ?>
+        <tr>
+            <td>
+                <?php echo $table ?>
+            </td>
+            <td>
+                <a href="<?php echo "dbdump/" . $file ?>">Download data</a>
+            </td>
+        </tr>
+        <?php
+            }
+        ?>
+    </table>
 </body>
 
 </html>
