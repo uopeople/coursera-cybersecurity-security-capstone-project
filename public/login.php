@@ -1,5 +1,12 @@
 <?php
 include __DIR__ . '/../setup.php';
+
+if(isset($_GET['message'])) {
+    $registration_message = "";
+    if (htmlspecialchars($_GET['message']) == "registration_successful") {
+        $registration_message = "<h2>Registration successful</h2>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -23,35 +30,46 @@ include __DIR__ . '/../setup.php';
 
 <body>
 <div id="header">
-    <h1>Login</h1>
+    <i class="fas fa-comments icon"></i>
+    <h1>Coursera Capstone Project Messaging System</h1>
 </div>
-<div class="container main">
-    <form method="post" action="login_post.php">
-        <div>
-            <div>
-                <label>
-                    <span>Username</span><br>
-                    <input type="text" name="username" required>
-                </label>
-            </div>
-            <div>
-                <label>
-                    <span>Password</span><br>
-                    <input type="password" name="password" required>
-                </label>
-            </div>
-            <div>
-                <button type="submit" name="submit"><i class="fas fa-sign-in-alt"></i>&nbsp;Login</button>
-            </div>
-        </div>
-    </form>
-    <div>
-        <a href="reset_password.php">Forgot your password?</a>
+<form method="post" action="login_post.php">
+    <span><?php echo $registration_message;?></span>
+    <h2>Login</h2>
+
+    <div class="form-container">
+        <i class="fa fa-user icon"></i>
+        <input class="input-field" type="text" name="username" required
+                placeholder="Username" />
     </div>
-</div>
+
+    <div class="form-container">
+        <i class="fa fa-key icon"></i>
+        <input class="input-field" type="password" name="password" required
+                placeholder="Password" />
+    </div>
+
+    <div class="form-container">
+        <button type="submit" name="submit">
+            <i class="fas fa-sign-in-alt icon"></i>&nbsp;Login
+        </button>
+    </div>
+
+    <div class="form-container">
+        <a id="pass-reset" href="reset_password.php">Forgot your password?</a>
+    </div>
+</form>
 <div id="main-links">
-    <p id="link-home"><a href="index.php">Back to Startpage</a></p>
-    <p id="register">Register</p>
+    <p id="link-home">
+        <a href="index.php">
+            <i class="fas fa-home icon"></i>&nbsp;Back to Home
+        </a>
+    </p>
+    <p id="register">
+        <a href="register.php">
+            <i class="fas fa-user-plus icon"></i>&nbsp;Register
+        </a>
+    </p>
 </div>
 </body>
 
