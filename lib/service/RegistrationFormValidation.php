@@ -2,6 +2,8 @@
 
 namespace lib\service;
 
+use lib\db\Users;
+
 class RegistrationFormValidation {
 
     /**
@@ -19,12 +21,25 @@ class RegistrationFormValidation {
     public static $passRptErr = "";
 
     /**
+     * Set the value of the given field and ensure values_ok is false.
+     *
+     * @param bool $values_ok   Whether all values are ok (passed by reference)
+     * @param field $field      The field to set (passed by reference)
+     * @param string $value     The value to set
+     */
+    private function setError(bool &$values_ok, &$field, string $value) {
+        $field = $value;
+        $values_ok = FALSE;
+    }
+
+    /**
      * Ensure that all mandatory form values have been entered.
      *
      * @param string $username          The username entered by the user
      * @param string $email             The email address entered by the user
      * @param string $password          The password entered by the user
      * @param string $password_repeat   The repeated password entered by the user
+     * @param Users  $dbUsers           Access to database table 'users'
      *
      * @return boolean Whether all values are ok.
      */
@@ -32,24 +47,30 @@ class RegistrationFormValidation {
         string $username,
         string $email,
         string $password,
-        string $password_repeat
+        string $password_repeat,
+        Users $dbUsers
     ): bool {
         $values_ok = TRUE;
 
-        // Check for empty username
         if (empty($username)) {
-            self::$usernameErr = "Username is required";
-            $values_ok = FALSE;
+            // Username is empty
+            self::setError($values_ok, self::$usernameErr, "Username is required");
         } else {
+            // Save username to keep the value in the form
             self::$username = $username;
-            // Check if username contains invalid characters
+
             if(preg_match("/[^[:alnum:]\-_]/", $username)) {
-                self::$usernameErr = "Username must contain only: capital letters, lowercase letters, numbers, _, -";
-                $values_ok = FALSE;
-            // Check if username is too long
+                // Username contains invalid characters
+                self::setError($values_ok, self::$usernameErr,
+                               "Username must contain only: capital letters (A-Z), "
+                               . "lowercase letters (a-z), numbers (0-9), underscore (_), dash (-)");
             } elseif(strlen($username) > 255) {
-                self::$usernameErr = "Username cannot be longer than 255 characters";
-                $values_ok = FALSE;
+                // Username is too long
+                self::setError($values_ok, self::$usernameErr,
+                               "Username cannot be longer than 255 characters");
+            } elseif($dbUsers->loadUserByUsername($username)) {
+                // Username exists is database
+                self::setError($values_ok, self::$usernameErr, "Username already exists");
             }
         }
 
