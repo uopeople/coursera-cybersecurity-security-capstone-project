@@ -54,10 +54,6 @@ if(isset($_GET['message'])) {
             <i class="fas fa-sign-in-alt icon"></i>&nbsp;Login
         </button>
     </div>
-
-    <div class="form-container">
-        <a id="pass-reset" href="reset_password.php">Forgot your password?</a>
-    </div>
 </form>
 <div id="main-links">
     <p id="link-home">
