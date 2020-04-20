@@ -23,7 +23,7 @@ if(isset($_POST['register-submit'])) {
     {
         $ok = $users->registerNewUser($_POST["username"], $_POST["email"], $_POST["password"]);
         if ($ok) {
-            header("Location: /login.php", true, 303);
+            header("Location: /login.php?message=registration_successful", true, 303);
             exit();
         } else {
             $registrationErr = "Registration failed due to a server error. Please try again later.";

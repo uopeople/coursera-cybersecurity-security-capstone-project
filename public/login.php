@@ -1,5 +1,12 @@
 <?php
 include __DIR__ . '/../setup.php';
+
+if(isset($_GET['message'])) {
+    $registration_message = "";
+    if (htmlspecialchars($_GET['message']) == "registration_successful") {
+        $registration_message = "<h2>Registration successful</h2>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,6 +34,7 @@ include __DIR__ . '/../setup.php';
     <h1>Coursera Capstone Project Messaging System</h1>
 </div>
 <form method="post" action="login_post.php">
+    <span><?php echo $registration_message;?></span>
     <h2>Login</h2>
 
     <div class="form-container">
