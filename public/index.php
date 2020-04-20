@@ -33,16 +33,20 @@ if ($sessMgr->getAuthenticatedUser()) {
 
 <body>
     <div id="header">
-        <i class="fas fa-comments"></i>
+        <i class="fas fa-comments icon"></i>
         <h1>Coursera Capstone Project Messaging System</h1>
     </div>
     <div id="main-links">
         <p id="login">
-            <a href="login.php">
-                <i class="fas fa-sign-in-alt"></i>&nbsp;Log in
+            <a href="login.php" class="large-font">
+                <i class="fas fa-sign-in-alt icon"></i>&nbsp;Log in
             </a>
         </p>
-        <p id="register">Register</p>
+        <p id="register">
+            <a href="register.php" class="large-font">
+                <i class="fas fa-user-plus icon"></i>&nbsp;Register
+            </a>
+        </p>
     </div>
 </body>
 
