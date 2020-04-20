@@ -44,9 +44,9 @@ class Dump
     private function loadAndDumpAllRowsFromTable(string $tableName): void
     {
         
-        $sql = 'SELECT * FROM ?';
+        $sql = 'SELECT * FROM '.$tableName;
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$tableName]);
+        $stmt->execute();
         $rows[] = $stmt->fetch(PDO::FETCH_ASSOC);
          if ($stmt->execute()) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
