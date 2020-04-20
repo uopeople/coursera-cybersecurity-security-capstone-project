@@ -33,7 +33,7 @@ class RegistrationFormValidation {
     }
 
     /**
-     * Ensure that all mandatory form values have been entered.
+     * Ensure that all mandatory form values have been entered and are valid.
      *
      * @param string $username          The username entered by the user
      * @param string $email             The email address entered by the user

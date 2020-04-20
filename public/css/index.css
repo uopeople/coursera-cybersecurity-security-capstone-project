@@ -121,6 +121,11 @@ form {
     display: none;
 }
 
+.form-container #pass-reset {
+    grid-area: button;
+    text-align: center;
+}
+
 .form-container button:hover {
     opacity: 1;
 }

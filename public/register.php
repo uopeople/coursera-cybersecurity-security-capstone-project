@@ -83,7 +83,7 @@ if(isset($_POST['register-submit'])) {
 
         <div class="form-container">
             <button type="submit" name="register-submit">
-                <i class="fas fa-user-plus icon"></i>Register
+                <i class="fas fa-user-plus icon"></i>&nbsp;Register
             </button>
         </div>
 
@@ -97,10 +97,14 @@ if(isset($_POST['register-submit'])) {
     <div id="main-links">
         <p id="link-home">
             <a href="index.php">
-                <i class="fas fa-home icon"></i>Back to Home
+                <i class="fas fa-home icon"></i>&nbsp;Back to Home
             </a>
         </p>
-        <p id="login">Log in</p>
+        <p id="login">
+            <a href="login.php">
+                <i class="fas fa-sign-in-alt icon"></i>&nbsp;Log in
+            </a>
+        </p>
     </div>
 </body>
 
