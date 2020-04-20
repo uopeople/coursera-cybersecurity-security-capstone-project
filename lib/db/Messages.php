@@ -5,6 +5,7 @@ namespace lib\db;
 
 use Exception;
 use lib\model\Message;
+use lib\db\Users;
 use PDO;
 
 /**
@@ -123,10 +124,11 @@ class Messages
     
     private function createMessageEntityFromDbRecord(array $dbRecord): Message
     {
-         return new Message(
+        $users = new Users($this->pdo);
+        return new Message(
             intval($dbRecord['id']),
-            intval($dbRecord['sender']),
-            intval($dbRecord['recipient']),
+            $users->loadUserById(intval($dbRecord['sender']))->getUsername(),
+            $users->loadUserById(intval($dbRecord['recipient']))->getUsername(),
             $dbRecord['title'],
             $dbRecord['message'],
             $dbRecord['date'],

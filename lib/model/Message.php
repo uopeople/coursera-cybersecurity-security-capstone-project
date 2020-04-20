@@ -16,12 +16,12 @@ class Message
     private $id;
 
     /**
-     * @var int
+     * @var string
      */
     private $sender;
 
     /**
-     * @var int
+     * @var string
      */
     private $recipient;
 
@@ -48,8 +48,8 @@ class Message
 
     public function __construct(
         int $id,
-        int $sender,
-        int $recipient,
+        string $sender,
+        string $recipient,
         string $title,
         string $message,
         string $messageDate,
@@ -74,17 +74,17 @@ class Message
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getSender(): int
+    public function getSender(): string
     {
         return $this->sender;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getRecipient(): int
+    public function getRecipient(): string
     {
         return $this->recipient;
     }
@@ -97,12 +97,20 @@ class Message
         return $this->message;
     }
     
-     /**
+    /**
      * @return string
      */
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessageDate(): string
+    {
+        return $this->messageDate;
     }
 
     /**
@@ -113,5 +121,4 @@ class Message
         return $this->read;
     }
 
-    
 }

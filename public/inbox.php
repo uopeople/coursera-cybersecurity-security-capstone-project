@@ -1,12 +1,17 @@
-<!DOCTYPE html>
-<html lang=en>
-
 <?php
 include __DIR__ . '/../setup.php';
 
 use lib\db\Messages;
 
+if (!isset($_SESSION['user'])) {
+    header('Location: /login.php?message=login_required', true, 303);
+    exit();
+}
+
 ?>
+
+<!DOCTYPE html>
+<html lang=en>
 
 <head>
     <meta http-equiv=Content-Type content="text/html; charset=utf-8">
@@ -26,56 +31,47 @@ use lib\db\Messages;
 
 <body>
 <div id="header">
-    <h1>Inbox</h1>
+    <i class="fas fa-comments icon"></i>
+    <h1>Coursera Capstone Project Messaging System</h1>
 </div>
 <div class="container main">
+    <h2>Inbox</h2>
+    <div>
         <div>
-            <div>
-                <a href="write_message.php">Create New Message</a> <!-- review write_message page address -->
-            </div>
-            <div>
+            <a href="write_message.php">Create New Message</a> <!-- review write_message page address -->
+        </div>
+        <div>
             <?php
-            if (isset($_SESSION['user']))
-            {
                 $user = $_SESSION["user"];
                 $userid = $user->getId();
                 $message = new Messages();
                 $inboxMessages = $message->loadMessagesByRecipient($userid);
-            }
-            else 
-            {
-                header('Location: /login.php', true, 303);
-                exit();
-            }       
-            
-           ?>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Sender</th>
-                <th>Recipient</th>
-                <th>Message</th>
-                <th>Date</th>
-                <th>Read</th>
-            </tr>
-            <?php
-               $i = 0;
-               while ($i < count($inboxMessages)) {
-                   $message = $inboxMessages[$i];
-                   echo "<tr>";
-                   echo "<td>".htmlspecialchars($message->id)."</td>";
-                   echo "<td>".htmlspecialchars($message->sender)."</td>";
-                   echo "<td>".htmlspecialchars($message->recipient)."</td>";
-                   echo "<td>".htmlspecialchars($message->message)."</td>";
-                   echo "<td>".htmlspecialchars($message->messageDate)."</td>";
-                   echo "<td>".htmlspecialchars($message->read)."</td>";
-                   echo "</tr>";
-                   $i++;
-               }
-
             ?>
-        </table>
-            </div>
+            <table>
+                <tr>
+                    <th>From</th>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Message</th>
+                    <th>Read</th>
+                </tr>
+                <?php
+                $i = 0;
+                while ($i < count($inboxMessages)) {
+                    $message = $inboxMessages[$i];
+                    echo "<tr>";
+                    echo "<td>".htmlspecialchars($message->getSender())."</td>";
+                    echo "<td>".htmlspecialchars($message->getMessageDate())."</td>";
+                    echo "<td>".htmlspecialchars($message->getTitle())."</td>";
+                    echo "<td>".htmlspecialchars($message->getMessage())."</td>";
+                    echo "<td>".htmlspecialchars($message->isRead())."</td>";
+                    echo "</tr>";
+                    $i++;
+                }
+                ?>
+            </table>
+        </div>
+    </div>
 </body>
 
 </html>
