@@ -70,7 +70,7 @@ if(isset($_POST['register-submit'])) {
         <div class="form-container">
             <i class="fa fa-key icon"></i>
             <input class="input-field" type="password" name="password"
-                   placeholder="Password">
+                   placeholder="Password (minimum 10 characters, must contain both letters and numbers)">
             <span class="error"><?php echo RegistrationFormValidation::$passErr;?></span>
         </div>
 
