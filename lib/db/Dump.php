@@ -33,20 +33,27 @@ class Dump
      */
     public function loadAllRowsFromAllTables()
     {
-        $this->loadAndDumpAllRowsFromTable("users");
-        $this->loadAndDumpAllRowsFromTable("messages");
+        $sql = 'SELECT table_name FROM information_schema.tables '
+               . "WHERE table_schema = 'public' ORDER BY table_name";
+        $stmt = $this->pdo->prepare($sql);
+
+        if ($stmt->execute()) {
+            while ($tableName = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $table = $tableName['table_name'];
+                echo "<h3>" . $table . "</h3>";
+                $this->loadAndDumpAllRowsFromTable($table);
+            }
+        }
         
     }
 
     private function loadAndDumpAllRowsFromTable(string $tableName): void
     {
+        // Concatenating the table name is safe here, since the tableName is obtained from the database itself.
         $sql = 'SELECT * FROM ' . $tableName;
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        $rows[] = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($stmt->execute()) {
-            echo "<h3>" . $tableName . "</h3>";
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 echo "<p>";
                 foreach($row as $key => $value) {
