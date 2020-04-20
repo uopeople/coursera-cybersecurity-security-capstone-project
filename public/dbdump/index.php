@@ -31,9 +31,9 @@ $files = $dump->loadAllRowsFromAllTables();
     <i class="fas fa-comments"></i>
     <h1>Coursera Capstone Project Messaging System</h1>
 </div>
-<div class="container main">
+<div id="dbdump-main">
     <h2>DB Dump</h2>
-    <table>
+    <table id="dbdump-table">
         <tr>
             <th>Table</th>
             <th>Data</th>

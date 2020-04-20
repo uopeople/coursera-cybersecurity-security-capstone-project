@@ -32,3 +32,23 @@
     padding: 1em;
     border: 1px solid black;
 }
+
+#dbdump-main {
+    text-align: center;
+}
+
+#dbdump-table {
+    margin: 0 auto;
+    width: 25%;
+    min-width: 250px;
+}
+
+#dbdump-table td, #dbdump-table th {
+    border: 1px solid #b0b0b0;
+    text-align: center;
+    padding: 8px;
+}
+
+#dbdump-table tr:nth-child(even) {
+    background-color: #eeeeee;
+}
