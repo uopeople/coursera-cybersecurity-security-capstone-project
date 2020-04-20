@@ -21,16 +21,17 @@
     text-decoration: none;
 }
 
+#header {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
 #header i {
     font-size: 2em;
 }
 
-.icon {
-    padding-right: 0.75em;
-}
-
 #main-links {
     margin-top: 2em;
+    padding: 2em 0;
 }
 
 #main-links p a {

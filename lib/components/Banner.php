@@ -37,7 +37,7 @@ class Banner
         return ob_get_clean();
     }
 
-    public static function renderAppBanner(string $pageTitle): string
+    public static function renderAppBanner(?string $pageTitle): string
     {
         $c = new Banner(AppInfo::APP_NAME, $pageTitle);
         return $c->render();

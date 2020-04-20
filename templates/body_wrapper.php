@@ -1,6 +1,6 @@
 <?php
 /**
- * @var string $pageTitle
+ * @var string|null $pageTitle
  * @var string $htmlContent
  */
 

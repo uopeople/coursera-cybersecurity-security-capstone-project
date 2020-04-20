@@ -7,7 +7,7 @@ namespace lib\components;
 class AppInfo
 {
 
-    const APP_NAME = 'The app name'; // TODO what name do we give our app?
+    const APP_NAME = 'Chat no. 8';
 
     private static $baseUrl = '/';
 
