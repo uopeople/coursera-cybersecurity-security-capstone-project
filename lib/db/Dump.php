@@ -11,7 +11,6 @@ use PDO;
  */
 class Dump
 {
-
     /**
      * @var PDO
      */
@@ -27,50 +26,34 @@ class Dump
         $this->pdo = Connection::get_db_pdo();
     }
 
-    
-   
     /**
      * Extract all rows from all table and write in csv file
-     *   
+     *
      * @return string
      */
-    public function loadAllrowsFromAllTables()
+    public function loadAllRowsFromAllTables()
     {
         $this->loadAndDumpAllRowsFromTable("users");
-        return $this->loadAndDumpAllRowsFromTable("message");
+        $this->loadAndDumpAllRowsFromTable("messages");
         
     }
 
     private function loadAndDumpAllRowsFromTable(string $tableName): void
     {
-        
-        $sql = 'SELECT * FROM '.$tableName;
+        $sql = 'SELECT * FROM ' . $tableName;
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $rows[] = $stmt->fetch(PDO::FETCH_ASSOC);
-         if ($stmt->execute()) {
+
+        if ($stmt->execute()) {
+            echo "<h3>" . $tableName . "</h3>";
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $this->CreateOrAddToFileFromDbRecord($row, $tableName);
+                echo "<p>";
+                foreach($row as $key => $value) {
+                    echo $key . ": " . $value . "<br />";
+                }
+                echo "</p>";
             }
         }
-         
-    }
-    
-    private function CreateOrAddToFileFromDbRecord(array $dbRecord, string $tableName): string
-    {
-        $filename= "dbdump.csv";
-        $myfile = fopen("../public/dbdump/".$filename, "a+") or die("Unable to open file!");
-        
-        $i=0;
-        fwrite($myfile, "DUMP TABLE ".$tableName."\n");
-        while($i<count($dbRecord))
-         {   
-             fwrite($myfile, $dbRecord[i].";");
-             $i++;
-         }
-        fwrite($myfile,"\n");
-        fclose($myfile);
-        
-        return $filename;
     }
 }
