@@ -22,7 +22,7 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST') {
 
 if (!isset($_POST['recipient'], $_POST['title'], $_POST['message-body'])) {
     echo '<h3>Form data is invalid</h3>';
-    echo '<a href="write_message.php">Back to the form</a>';
+    echo '<a href="write-message.php">Back to the form</a>';
     http_response_code(400);
     return;
 }
@@ -47,7 +47,7 @@ try {
     $recipient = $users->loadUserByUsername($recipientUsername);
     if (!$recipient) {
         echo '<h1>Bad request</h1><p>This user does not exist.</p>';
-        echo '<p><a href="write_message.php">Back to the form</a></p>';
+        echo '<p><a href="write-message.php">Back to the form</a></p>';
         http_response_code(400);
     }
 
@@ -61,7 +61,7 @@ try {
     );
     if (!$ok) {
         echo '<h1>Internal server error</h1><p>Something went wrong. The message could not be stored.</p>';
-        echo '<p><a href="write_message.php">Back to the form</a></p>';
+        echo '<p><a href="write-message.php">Back to the form</a></p>';
         http_response_code(500);
         return;
     }

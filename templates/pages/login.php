@@ -80,7 +80,7 @@ use lib\components\AppInfo;
             </span> Back to Home
         </a>
     </p>
-    <p id="<?= AppInfo::urlRegisterPage(); ?>">
+    <p id="register">
         <a href="<?= AppInfo::urlRegisterPage() ?>" class="large-font">
             <span class="icon">
                 <svg focusable="false" class="svg-inline--fa fa-user-plus fa-w-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path

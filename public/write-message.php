@@ -9,7 +9,7 @@ include __DIR__ . '/../setup.php';
 
     <hr>
 
-    <form method="post" action="write_message_post.php">
+    <form method="post" action="write-message-post.php">
         <div>
             <label>
                 <span>Recipient</span><br>

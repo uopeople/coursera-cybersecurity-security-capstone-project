@@ -31,6 +31,11 @@ class AppInfo
         return self::$baseUrl . 'login.php';
     }
 
+    public static function urlLogout(): string
+    {
+        return self::$baseUrl . 'logout.php';
+    }
+
     public static function urlRegisterPage(): string
     {
         return self::$baseUrl . 'register.php';
@@ -39,5 +44,15 @@ class AppInfo
     public static function urlInbox(): string
     {
         return self::$baseUrl . 'inbox.php';
+    }
+
+    public static function urlSentMessages(): string
+    {
+        return self::$baseUrl . 'sent-messages.php';
+    }
+
+    public static function urlWriteMessage(): string
+    {
+        return self::$baseUrl . 'write-message.php';
     }
 }
