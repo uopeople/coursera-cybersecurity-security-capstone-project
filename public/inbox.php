@@ -6,7 +6,7 @@ use lib\db\Messages;
 use lib\service\SymmetricEncryption;
 
 if (!isset($_SESSION['user'])) {
-    header('Location: /login.php', true, 303);
+    header('Location: /login.php?message=login_required', true, 303);
     exit();
 }
 
@@ -44,9 +44,11 @@ try {
 
 <body>
 <div id="header">
-    <h1>Inbox</h1>
+    <i class="fas fa-comments icon"></i>
+    <h1>Coursera Capstone Project Messaging System</h1>
 </div>
 <div class="container main">
+    <h2>Inbox</h2>
     <div>
         <div>
             <a href="write_message.php">Create New Message</a> <!-- review write_message page address -->
