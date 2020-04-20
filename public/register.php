@@ -1,9 +1,18 @@
 <?php
+
 include __DIR__ . '/../setup.php';
 
 use lib\db\Connection;
 use lib\db\Users;
 use lib\service\RegistrationFormValidation;
+use lib\service\SessionManagerPhp;
+
+$sessMgr = new SessionManagerPhp();
+if ($sessMgr->getAuthenticatedUser()) {
+    // redirect to inbox
+    header('Location: /inbox.php?message=already-authenticated', true, 303);
+    return;
+}
 
 try {
     $pdo = Connection::get_db_pdo();

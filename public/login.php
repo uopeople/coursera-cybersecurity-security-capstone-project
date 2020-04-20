@@ -1,17 +1,30 @@
 <?php
+
+use lib\service\SessionManagerPhp;
+
 include __DIR__ . '/../setup.php';
+
+$sessMgr = new SessionManagerPhp();
+if ($sessMgr->getAuthenticatedUser()) {
+    // redirect to inbox
+    header('Location: /inbox.php?message=already-authenticated', true, 303);
+    return;
+}
 
 if(isset($_GET['message'])) {
     $registration_message = "";
     switch (htmlspecialchars($_GET['message'])) {
         case "registration_successful":
-            $registration_message = "<h3>Registration successful</h3>";
+            $registration_message = "Registration successful";
             break;
         case "login_required":
-            $registration_message = "<h3>You must be logged in</h3>";
+            $registration_message = "You must be logged in";
             break;
     }
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
