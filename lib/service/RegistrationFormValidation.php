@@ -74,20 +74,24 @@ class RegistrationFormValidation {
             }
         }
 
-        // Check for empty email address
         if (empty($email)) {
-            self::$emailErr = "Email address is required";
+            // Email address is empty
+            self::setError($values_ok, self::$emailErr, "Email address is required");
             $values_ok = FALSE;
         } else {
+            // Save email to keep the value in the form
             self::$email = $email;
-            // Check if this is a valid email address
+
             if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                self::$emailErr = "Email address is not valid";
-                $values_ok = FALSE;
-            // Check if email is too long
+                // Not a valid email address
+                self::setError($values_ok, self::$emailErr, "Email address is not valid");
             } elseif(strlen($email) > 255) {
-                self::$emailErr = "Email address cannot be longer than 255 characters";
-                $values_ok = FALSE;
+                // Email address is too long
+                self::setError($values_ok, self::$emailErr,
+                               "Email address cannot be longer than 255 characters");
+            } elseif($dbUsers->loadUserByEmail($email)) {
+                // Email address exists is database
+                self::setError($values_ok, self::$emailErr, "Email address already exists");
             }
         }
 
