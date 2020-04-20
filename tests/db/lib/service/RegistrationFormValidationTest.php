@@ -34,7 +34,7 @@ class RegistrationFormValidationTest extends TestCase
      */
     private $dummyUser2Name = 'testuser';
     private $dummyUser2Email = 'test@example.com';
-    private $dummyUser2Pass = 'pass';
+    private $dummyUser2Pass = 'complex_*PASS//';
 
     /**
      * @before
@@ -96,10 +96,14 @@ class RegistrationFormValidationTest extends TestCase
                                                                 $this->dummyUser2Pass, $this->dummyUser2Pass,
                                                                 $this->dbUsers);
 
+        $this->assertEmpty(RegistrationFormValidation::$usernameErr,
+                           'usernameErr should be blank, not "' . RegistrationFormValidation::$usernameErr . '"');
+        $this->assertEmpty(RegistrationFormValidation::$emailErr,
+                           'emailErr should be blank, not "' . RegistrationFormValidation::$emailErr . '"');
+        $this->assertEmpty(RegistrationFormValidation::$passErr,
+                           'passErr should be blank, not "' . RegistrationFormValidation::$passErr . '"');
+        $this->assertEmpty(RegistrationFormValidation::$passRptErr,
+                           'passRptErr should be blank, not "' . RegistrationFormValidation::$passRptErr . '"');
         $this->assertTrue($values_ok, 'Validation was expected to return true');
-        $this->assertEmpty(RegistrationFormValidation::$usernameErr, "usernameErr should be blank");
-        $this->assertEmpty(RegistrationFormValidation::$emailErr, "emailErr should be blank");
-        $this->assertEmpty(RegistrationFormValidation::$passErr, "passErr should be blank");
-        $this->assertEmpty(RegistrationFormValidation::$passRptErr, "passRptErr should be blank");
     }
 }

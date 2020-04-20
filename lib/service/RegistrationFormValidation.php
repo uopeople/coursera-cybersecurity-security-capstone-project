@@ -96,25 +96,42 @@ class RegistrationFormValidation {
         }
 
         if (empty($password)) {
-            self::$passErr = "Password is required";
-            $values_ok = FALSE;
+            // Password is empty
+            self::setError($values_ok, self::$passErr, "Password is required");
         } elseif(strlen($password) > 255) {
-            // Check if password is too long
-            self::$passErr = "Password cannot be longer than 255 characters";
-            $values_ok = FALSE;
+            // Password is too long
+            self::setError($values_ok, self::$passErr,
+                           "Password cannot be longer than 255 characters");
+        } else {
+            $pass_hint = "<br /><br />" . "Hint: A good way to create a long complex password "
+                         . "that is memorable is to select 2 to 3 common words, and separate them "
+                         . "using different symbols. Alternatively, use a password manager.";
+            if(strlen($password) < 10) {
+                // Password is too short
+                self::setError($values_ok, self::$passErr,
+                               "Password is too short" . $pass_hint);
+            } elseif(preg_match_all("/^[[:alpha:]]+$/", $password)) {
+                // Password is made up of letters only
+                self::setError($values_ok, self::$passErr,
+                               "Weak password (contains letters only)" . $pass_hint);
+            } elseif(preg_match_all("/^[[:digit:]]+$/", $password)) {
+                // Password is made up of numbers only
+                self::setError($values_ok, self::$passErr,
+                               "Weak password (contains numbers only)" . $pass_hint);
+            }
         }
 
         if (empty($password_repeat)) {
-            self::$passRptErr = "Please enter your password again";
-            $values_ok = FALSE;
+            // Password Repeat address is empty
+            self::setError($values_ok, self::$passRptErr, "Please enter your password again");
         }
 
         if (!empty($password)
             and !empty($password_repeat)
             and $password != $password_repeat
         ) {
-            self::$passRptErr = "Passwords don't match";
-            $values_ok = FALSE;
+            // Passwords don't match
+            self::setError($values_ok, self::$passRptErr, "Passwords don't match");
         }
 
         return $values_ok;

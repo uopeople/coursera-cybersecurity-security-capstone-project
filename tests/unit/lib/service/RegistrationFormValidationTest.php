@@ -20,7 +20,7 @@ class RegistrationFormValidationTest extends TestCase
      */
     private $dummyUserName = 'username';
     private $dummyUserEmail = 'email@example.com';
-    private $dummyUserPass = 'pass';
+    private $dummyUserPass = 'complex_*PASS//';
 
     /**
      * Create a stub of the Users class.
@@ -152,6 +152,39 @@ class RegistrationFormValidationTest extends TestCase
     }
 
     /**
+     * Fail validation if the password was too short.
+     */
+    public function test_validateValues_returns_false_on_short_password() {
+        $values_ok = RegistrationFormValidation::validateValues($this->dummyUserName, $this->dummyUserEmail,
+                                                                str_repeat("x", 5), "", $this->$users);
+
+        $this->assertFalse($values_ok, 'Validation was expected to return false');
+        $this->assertNotEmpty(RegistrationFormValidation::$passErr, "passErr should not be blank");
+    }
+
+    /**
+     * Fail validation if the password is made up of letters only.
+     */
+    public function test_validateValues_returns_false_on_password_made_of_letters() {
+        $values_ok = RegistrationFormValidation::validateValues($this->dummyUserName, $this->dummyUserEmail,
+                                                                str_repeat("x", 12), "", $this->$users);
+
+        $this->assertFalse($values_ok, 'Validation was expected to return false');
+        $this->assertNotEmpty(RegistrationFormValidation::$passErr, "passErr should not be blank");
+    }
+
+    /**
+     * Fail validation if the password is made up of letters only.
+     */
+    public function test_validateValues_returns_false_on_password_made_of_numbers() {
+        $values_ok = RegistrationFormValidation::validateValues($this->dummyUserName, $this->dummyUserEmail,
+                                                                str_repeat("0", 12), "", $this->$users);
+
+        $this->assertFalse($values_ok, 'Validation was expected to return false');
+        $this->assertNotEmpty(RegistrationFormValidation::$passErr, "passErr should not be blank");
+    }
+
+    /**
      * Fail validation if the password was not repeated.
      */
     public function test_validateValues_returns_false_on_empty_password_repeat() {
@@ -203,10 +236,14 @@ class RegistrationFormValidationTest extends TestCase
                                                                 $this->dummyUserPass, $this->dummyUserPass,
                                                                 $this->$users);
 
+        $this->assertEmpty(RegistrationFormValidation::$usernameErr,
+                           'usernameErr should be blank, not "' . RegistrationFormValidation::$usernameErr . '"');
+        $this->assertEmpty(RegistrationFormValidation::$emailErr,
+                           'emailErr should be blank, not "' . RegistrationFormValidation::$emailErr . '"');
+        $this->assertEmpty(RegistrationFormValidation::$passErr,
+                           'passErr should be blank, not "' . RegistrationFormValidation::$passErr . '"');
+        $this->assertEmpty(RegistrationFormValidation::$passRptErr,
+                           'passRptErr should be blank, not "' . RegistrationFormValidation::$passRptErr . '"');
         $this->assertTrue($values_ok, 'Validation was expected to return true');
-        $this->assertEmpty(RegistrationFormValidation::$usernameErr, "usernameErr should be blank");
-        $this->assertEmpty(RegistrationFormValidation::$emailErr, "emailErr should be blank");
-        $this->assertEmpty(RegistrationFormValidation::$passErr, "passErr should be blank");
-        $this->assertEmpty(RegistrationFormValidation::$passRptErr, "passRptErr should be blank");
     }
 }
