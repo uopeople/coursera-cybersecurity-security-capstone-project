@@ -5,19 +5,28 @@ use lib\db\Connection;
 use lib\db\Users;
 use lib\service\RegistrationFormValidation;
 
+try {
+    $pdo = Connection::get_db_pdo();
+} catch (Exception $e) {
+    echo htmlspecialchars('Failed to initialize the database connection');
+    http_response_code(500);
+    exit();
+}
+$users = new Users($pdo);
+$validator = new RegistrationFormValidation($users);
+$registrationErr = "";
+
 // Register user on submission of the form.
 if(isset($_POST['register-submit'])) {
-    $pdo = Connection::get_db_pdo();
-    $users = new Users($pdo);
-    if (RegistrationFormValidation::validateValues(
-            $_POST["username"], $_POST["email"], $_POST["password"], $_POST["password-repeat"], $users))
+    if ($validator->validateValues(
+            $_POST["username"], $_POST["email"], $_POST["password"], $_POST["password-repeat"]))
     {
         $ok = $users->registerNewUser($_POST["username"], $_POST["email"], $_POST["password"]);
         if ($ok) {
             header("Location: /login.php", true, 303);
             exit();
         } else {
-            $registrationErr = "Registration failed. Please try again later.";
+            $registrationErr = "Registration failed due to a server error. Please try again later.";
         }
     }
 }
@@ -51,34 +60,46 @@ if(isset($_POST['register-submit'])) {
     <form id="register-form" action="register.php" method="post">
         <h2>Create a new account</h2>
 
+        <?php
+        if (empty($registrationErr)) {
+        ?>
+
         <div class="form-container">
             <i class="fa fa-user icon"></i>
-            <input class="input-field" type="text" name="username"
+            <input class="input-field" type="text" name="username" required
                    placeholder="Username"
-                   value="<?php echo RegistrationFormValidation::$username;?>">
-            <span class="error"><?php echo RegistrationFormValidation::$usernameErr;?></span>
+                   value="<?php echo htmlspecialchars($validator->getUsername());?>" />
+            <span class="error"><?php echo htmlspecialchars($validator->getUsernameErr());?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-envelope icon"></i>
-            <input class="input-field" type="email" name="email"
+            <input class="input-field" type="email" name="email" required
                    placeholder="Email"
-                   value="<?php echo RegistrationFormValidation::$email;?>">
-            <span class="error"><?php echo RegistrationFormValidation::$emailErr;?></span>
+                   value="<?php echo htmlspecialchars($validator->getEmail());?>" />
+            <span class="error"><?php echo htmlspecialchars($validator->getEmailErr());?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-key icon"></i>
-            <input class="input-field" type="password" name="password"
-                   placeholder="Password (minimum 10 characters, must contain both letters and numbers)">
-            <span class="error"><?php echo RegistrationFormValidation::$passErr;?></span>
+            <input class="input-field" type="password" name="password" required
+                   placeholder="Password (minimum 10 characters, must contain both letters and numbers)" />
+            <?php
+            $passErr = htmlspecialchars($validator->getPassErr());
+            if (!empty($passErr)) {
+                $passErr = $passErr . "<br /><br />" . "Hint: A good way to create a long complex "
+                           . "password that is memorable is to select 2 to 3 common words, and "
+                           . "separate them using different symbols. Alternatively, use a password manager.";
+            }
+            ?>
+            <span class="error"><?php echo $passErr;?></span>
         </div>
 
         <div class="form-container">
             <i class="fa fa-key icon"></i>
-            <input class="input-field" type="password" name="password-repeat"
-                   placeholder="Repeat password">
-            <span class="error"><?php echo RegistrationFormValidation::$passRptErr;?></span>
+            <input class="input-field" type="password" name="password-repeat" required
+                   placeholder="Repeat password" />
+            <span class="error"><?php echo htmlspecialchars($validator->getPassRptErr());?></span>
         </div>
 
         <div class="form-container">
@@ -87,11 +108,19 @@ if(isset($_POST['register-submit'])) {
             </button>
         </div>
 
+        <?php
+        } else {
+        ?>
+
         <div class="form-container">
             <span id="registration-error">
-                <?php echo $registrationErr;?>
+                <?php echo htmlspecialchars($registrationErr);?>
             </span>
         </div>
+
+        <?php
+        }
+        ?>
     </form>
 
     <div id="main-links">

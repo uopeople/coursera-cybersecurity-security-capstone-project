@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class RegistrationFormValidationTest extends TestCase
 {
     /**
-     * @var PDO
+     * @var \PDO
      */
     private $pdo;
 
@@ -21,6 +21,11 @@ class RegistrationFormValidationTest extends TestCase
      * @var Users
      */
     private $dbUsers;
+
+    /**
+     * @var RegistrationFormValidation
+     */
+    private $validator;
 
     /**
      * Credentials for a dummy user
@@ -42,23 +47,16 @@ class RegistrationFormValidationTest extends TestCase
      */
     public function setupUserTableAndServices() {
         $this->pdo = Connection::get_db_pdo();
+        $stmt = $this->pdo->prepare('DELETE FROM messages;');
+        $stmt->execute();
         $stmt = $this->pdo->prepare('DELETE FROM users;');
         $stmt->execute();
 
         $this->dbUsers = new Users($this->pdo);
 
         $this->dbUsers->registerNewUser($this->dummyUser1Name, $this->dummyUser1Email, $this->dummyUser1Pass);
-    }
 
-    /**
-     * Reset all error message fields of RegistrationFormValidation.
-     * @after
-     */
-    public function resetErrorMessages() {
-        RegistrationFormValidation::$usernameErr = "";
-        RegistrationFormValidation::$emailErr = "";
-        RegistrationFormValidation::$passErr = "";
-        RegistrationFormValidation::$passRptErr = "";
+        $this->validator = new RegistrationFormValidation($this->dbUsers);
     }
 
     /**
@@ -66,12 +64,11 @@ class RegistrationFormValidationTest extends TestCase
      * @throws Exception
      */
     public function test_validateValues_returns_false_if_username_exists() {
-        $values_ok = RegistrationFormValidation::validateValues($this->dummyUser1Name, $this->dummyUser1Email,
-                                                                $this->dummyUser1Pass, $this->dummyUser1Pass,
-                                                                $this->dbUsers);
+        $values_ok = $this->validator->validateValues($this->dummyUser1Name, $this->dummyUser1Email,
+                                                      $this->dummyUser1Pass, $this->dummyUser1Pass);
 
         $this->assertFalse($values_ok, 'Validation was expected to return false');
-        $this->assertNotEmpty(RegistrationFormValidation::$usernameErr, "usernameErr should not be blank");
+        $this->assertNotEmpty($this->validator->getUsernameErr(), "usernameErr should not be blank");
     }
 
     /**
@@ -79,12 +76,11 @@ class RegistrationFormValidationTest extends TestCase
      * @throws Exception
      */
     public function test_validateValues_returns_false_if_email_exists() {
-        $values_ok = RegistrationFormValidation::validateValues($this->dummyUser2Name, $this->dummyUser1Email,
-                                                                $this->dummyUser1Pass, $this->dummyUser1Pass,
-                                                                $this->dbUsers);
+        $values_ok = $this->validator->validateValues($this->dummyUser2Name, $this->dummyUser1Email,
+                                                      $this->dummyUser1Pass, $this->dummyUser1Pass);
 
         $this->assertFalse($values_ok, 'Validation was expected to return false');
-        $this->assertNotEmpty(RegistrationFormValidation::$emailErr, "usernameErr should not be blank");
+        $this->assertNotEmpty($this->validator->getEmailErr(), "usernameErr should not be blank");
     }
 
     /**
@@ -92,18 +88,17 @@ class RegistrationFormValidationTest extends TestCase
      * @throws Exception
      */
     public function test_validateValues_returns_true_on_successful_validation() {
-        $values_ok = RegistrationFormValidation::validateValues($this->dummyUser2Name, $this->dummyUser2Email,
-                                                                $this->dummyUser2Pass, $this->dummyUser2Pass,
-                                                                $this->dbUsers);
+        $values_ok = $this->validator->validateValues($this->dummyUser2Name, $this->dummyUser2Email,
+                                                      $this->dummyUser2Pass, $this->dummyUser2Pass);
 
-        $this->assertEmpty(RegistrationFormValidation::$usernameErr,
-                           'usernameErr should be blank, not "' . RegistrationFormValidation::$usernameErr . '"');
-        $this->assertEmpty(RegistrationFormValidation::$emailErr,
-                           'emailErr should be blank, not "' . RegistrationFormValidation::$emailErr . '"');
-        $this->assertEmpty(RegistrationFormValidation::$passErr,
-                           'passErr should be blank, not "' . RegistrationFormValidation::$passErr . '"');
-        $this->assertEmpty(RegistrationFormValidation::$passRptErr,
-                           'passRptErr should be blank, not "' . RegistrationFormValidation::$passRptErr . '"');
+        $this->assertEmpty($this->validator->getUsernameErr(),
+                           'usernameErr should be blank, not "' . $this->validator->getUsernameErr() . '"');
+        $this->assertEmpty($this->validator->getEmailErr(),
+                           'emailErr should be blank, not "' . $this->validator->getEmailErr() . '"');
+        $this->assertEmpty($this->validator->getPassErr(),
+                           'passErr should be blank, not "' . $this->validator->getPassErr() . '"');
+        $this->assertEmpty($this->validator->getPassRptErr(),
+                           'passRptErr should be blank, not "' . $this->validator->getPassRptErr() . '"');
         $this->assertTrue($values_ok, 'Validation was expected to return true');
     }
 }
