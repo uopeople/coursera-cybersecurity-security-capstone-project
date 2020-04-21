@@ -39,7 +39,7 @@ class LoginServiceTest extends TestCase
         $lockedTime = new DateTime();
         $lockedTime->setTimestamp(50);
         $userIp = '1.2.3.4';
-        $user = new User(1, 'username', 'email@example.com', 'pass', null, $userIp, 0, $lockedTime);
+        $user = new User(1, 'username', 'email@example.com', 'pass', $userIp, 0, $lockedTime);
 
         $this->assertTrue($sut->isUserLocked($user, $userIp), 'This user is expected to be locked');
     }
@@ -59,7 +59,7 @@ class LoginServiceTest extends TestCase
         $lockedTime = new DateTime();
         $lockedTime->setTimestamp(50);
         $attackerIp = '1.2.3.4';
-        $user = new User(1, 'username', 'email@example.com', 'pass', null, $attackerIp, 0, $lockedTime);
+        $user = new User(1, 'username', 'email@example.com', 'pass', $attackerIp, 0, $lockedTime);
 
         // differs from the ip stored in `User`, which is the ip that caused to account lock.
         $realUserIp = '1.2.1.9';
@@ -79,7 +79,7 @@ class LoginServiceTest extends TestCase
         $lockedTime = new DateTime();
         $lockedTime->setTimestamp(50);
         $userIp = '1.2.3.4';
-        $user = new User(1, 'username', 'email@example.com', 'pass', null, $userIp, 0, $lockedTime);
+        $user = new User(1, 'username', 'email@example.com', 'pass', $userIp, 0, $lockedTime);
 
         $this->assertFalse($sut->isUserLocked($user, $userIp), 'Should not be locked, locking period has expired.');
     }
