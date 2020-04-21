@@ -2,6 +2,8 @@
 
 /**
  * @var \lib\model\MessageView[] $boxMessages;
+ * @var bool|null                $isInbox (this is used in 'single-message.php')
+ *
  */
 
 use lib\components\Alertbox;

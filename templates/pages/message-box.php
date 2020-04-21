@@ -7,6 +7,7 @@ use lib\components\AppInfo;
  * @var string                   $pageTitle
  * @var bool|null                $linkToInbox
  * @var bool|null                $linkToSentBox
+ * @var bool|null                $isInbox (this is used in 'messages_list.php' and 'single-message.php')
  *
  */
 ?>

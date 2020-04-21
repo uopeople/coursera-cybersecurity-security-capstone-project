@@ -24,13 +24,16 @@ try {
     http_response_code(500);
 }
 
+// this variables are required by included templates...
 $pageTitle = 'Inbox';
 $linkToInbox = false;
 $linkToSentBox = true;
+$isInbox = true;
 
 ob_start();
 
 if (isset($_GET['message'])) {
+    $isErr = false;
     $msg = '';
     switch ($_GET['message']) {
         case 'already-authenticated':
@@ -38,9 +41,17 @@ if (isset($_GET['message'])) {
             break;
         case 'login-successful':
             $msg = 'Logged in successfully';
+            break;
+        case 'marked-as-read' :
+            $msg = 'Successfully marked message as "read"';
+            break;
+        case 'failed-to-mark-as-read':
+            $isErr = true;
+            $msg = 'Failed to mark message as "read"';
+            break;
     }
     if (!empty($msg)) {
-        echo '<section class="section">' . Alertbox::renderInfo(htmlspecialchars($msg)) . '</section>';
+        echo '<section class="section">' . ($isErr ? Alertbox::renderError($msg) : Alertbox::renderInfo($msg)) . '</section>';
     }
 }
 
