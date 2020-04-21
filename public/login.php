@@ -3,8 +3,13 @@ include __DIR__ . '/../setup.php';
 
 if(isset($_GET['message'])) {
     $registration_message = "";
-    if (htmlspecialchars($_GET['message']) == "registration_successful") {
-        $registration_message = "<h2>Registration successful</h2>";
+    switch (htmlspecialchars($_GET['message'])) {
+        case "registration_successful":
+            $registration_message = "<h3>Registration successful</h3>";
+            break;
+        case "login_required":
+            $registration_message = "<h3>You must be logged in</h3>";
+            break;
     }
 }
 ?>
