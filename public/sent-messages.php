@@ -2,6 +2,7 @@
 
 include __DIR__ . '/../setup.php';
 
+use lib\components\Alertbox;
 use lib\db\Connection;
 use lib\db\Messages;
 use lib\service\SessionManagerPhp;
@@ -28,6 +29,19 @@ $linkToInbox = true;
 $linkToSentBox = false;
 
 ob_start();
+
+if (isset($_GET['message'])) {
+    $msg = '';
+    switch ($_GET['message']) {
+        case 'sending-successful':
+            $msg = "The message has been sent successfully.";
+            break;
+    }
+    if (!empty($msg)) {
+        echo '<section class="section">' . Alertbox::renderSuccess(htmlspecialchars($msg)) . '</section>';
+    }
+}
+
 include TEMPLATE_DIR . '/pages/message-box.php';
 $htmlContent = ob_get_clean();
 

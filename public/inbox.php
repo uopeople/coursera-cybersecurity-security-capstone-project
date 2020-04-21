@@ -2,6 +2,7 @@
 
 include __DIR__ . '/../setup.php';
 
+use lib\components\Alertbox;
 use lib\db\Connection;
 use lib\db\Messages;
 use lib\service\SessionManagerPhp;
@@ -28,6 +29,21 @@ $linkToInbox = false;
 $linkToSentBox = true;
 
 ob_start();
+
+if (isset($_GET['message'])) {
+    $msg = '';
+    switch ($_GET['message']) {
+        case 'already-authenticated':
+            $msg = "You are already authenticated.";
+            break;
+        case 'login-successful':
+            $msg = 'Logged in successfully';
+    }
+    if (!empty($msg)) {
+        echo '<section class="section">' . Alertbox::renderInfo(htmlspecialchars($msg)) . '</section>';
+    }
+}
+
 include TEMPLATE_DIR . '/pages/message-box.php';
 $htmlContent = ob_get_clean();
 
