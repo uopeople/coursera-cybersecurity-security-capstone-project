@@ -12,7 +12,7 @@
         <i><?= htmlspecialchars($message->getSenderName()) ?></i> to <i><?= htmlspecialchars($message->getRecipientName()) ?></i>
         <hr>
         <p>
-            <?= htmlspecialchars($message->getDecryptedMessageBody()) ?>
+            <?= nl2br(htmlspecialchars($message->getDecryptedMessageBody())) ?>
         </p>
     </div>
 </article>
