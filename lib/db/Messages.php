@@ -167,6 +167,13 @@ class Messages
         }
     }
 
+    public function markAsRead(int $msgId)
+    {
+        $sql = 'UPDATE messages SET read = true WHERE id = ?';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(1, $msgId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
 
     private function createMessageEntityFromDbRecord(array $dbRecord): Message
     {
