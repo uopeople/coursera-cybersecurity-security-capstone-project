@@ -125,7 +125,7 @@ class SymmetricEncryption
     private function deriveKeyFromPassword(?string $salt)
     {
         $salt = $salt ?? $this->getStrongRandomData(8);
-        $iterations = 1000;
+        $iterations = 10000;
         $key = openssl_pbkdf2($this->password, $salt, $this->keyLength, $iterations, 'sha256');
         if ($key === false) {
             $lastErr = error_get_last();
