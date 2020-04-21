@@ -28,6 +28,11 @@ class MessageFormValidation
     /**
      * @var string
      */
+    private $recipientName = '';
+
+    /**
+     * @var string
+     */
     private $recipientErr = '';
 
     /**
@@ -70,6 +75,7 @@ class MessageFormValidation
             $this->isValid = false;
             $this->recipientErr = 'recipient is required';
         } else {
+            $this->recipientName = $formData['recipient'];
             $user = $this->dbUsers->loadUserByUsername($formData['recipient']);
             if (!$user) {
                 $this->isValid = false;
@@ -100,6 +106,14 @@ class MessageFormValidation
     public function getRecipientId(): ?int
     {
         return $this->recipientId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRecipientName(): string
+    {
+        return $this->recipientName;
     }
 
     /**

@@ -11,7 +11,11 @@
     <div class="field">
         <label class="label" for="field-recipient">Recipient</label>
         <div class="control">
-            <input id="field-recipient" name="recipient" class="input" type="text" placeholder="The username of the recipient">
+            <input id="field-recipient"
+                   name="recipient" class="input"
+                   type="text"
+                   value="<?= htmlspecialchars($validation->getRecipientName()) ?>"
+                   placeholder="The username of the recipient">
         </div>
         <?php if ($validation->getRecipientErr()): ?>
             <p class="help is-danger"><?= htmlspecialchars($validation->getRecipientErr()) ?></p>
@@ -21,14 +25,19 @@
     <div class="field">
         <label class="label" for="field-title">Title / Subject</label>
         <div class="control">
-            <input type="text" name="title" id="field-title" class="input" required maxlength="255">
+            <input type="text" name="title" id="field-title" class="input"
+                   required maxlength="255"
+                   value="<?= htmlspecialchars($validation->getTitle()) ?>">
         </div>
     </div>
 
     <div class="field">
         <label class="label" for="message-body">The message</label>
         <div class="control">
-            <textarea id="message-body" name="message-body" class="textarea" rows="9" required></textarea>
+            <textarea
+                    id="message-body"
+                    name="message-body"
+                    class="textarea" rows="9" required><?= htmlspecialchars($validation->getMsgBody()) ?></textarea>
         </div>
     </div>
 
