@@ -88,7 +88,7 @@ if(isset($_POST['register-submit'])) {
             $passErr = htmlspecialchars($validator->getPassErr());
             if (!empty($passErr)) {
                 $passErr = $passErr . "<br /><br />" . "Hint: A good way to create a long complex "
-                           . "password that is memorable is to select 2 to 3 common words, and "
+                           . "password that is memorable is to select 2 to 3 words, and "
                            . "separate them using different symbols. Alternatively, use a password manager.";
             }
             ?>
