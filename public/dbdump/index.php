@@ -3,8 +3,41 @@ include __DIR__ . '/../../setup.php';
 
 use lib\db\Dump;
 
-$dump = new Dump();
-$files = $dump->loadAllRowsFromAllTables();
+// the tables that can be dumped...
+$tables = ['users', 'messages'];
+
+try {
+    $dump = new Dump($tables);
+} catch (Exception $e) {
+    echo 'failed to initialize database connection';
+    http_response_code(500);
+}
+
+if (isset($_GET['table']) && in_array($_GET['table'], $tables, true)) {
+    // dump this table...
+    $tableToDump = $_GET['table'];
+
+    $filename = "$tableToDump.csv";
+
+    $result = $dump->loadAllRowsFromTable($tableToDump);
+    $out = fopen('php://output', 'wb');
+    ob_start();
+    foreach ($result as $row) {
+        fputcsv($out, $row);
+    }
+    $data = ob_get_clean();
+
+    // write response
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment filename="' . $filename . '";');
+    echo $data;
+
+    exit();
+}
+
+// if 'table' param is not set (or invalid), show list of links
 
 ?>
 
@@ -38,20 +71,16 @@ $files = $dump->loadAllRowsFromAllTables();
             <th>Table</th>
             <th>Data</th>
         </tr>
-        <?php
-            foreach($files as $table => $file) {
-        ?>
-        <tr>
-            <td>
-                <?php echo $table ?>
-            </td>
-            <td>
-                <a href="<?php echo "dbdump/" . $file ?>">Download data</a>
-            </td>
-        </tr>
-        <?php
-            }
-        ?>
+        <?php foreach ($tables as $table): ?>
+            <tr>
+                <td>
+                    <?php echo $table ?>
+                </td>
+                <td>
+                    <a target="_blank" href="/dbdump/index.php?table=<?= urlencode($table) ?>">Download data</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
     </table>
 </body>
 

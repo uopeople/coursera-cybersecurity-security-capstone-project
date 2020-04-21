@@ -17,81 +17,63 @@ class Dump
     private $pdo;
 
     /**
+     * @var string[]
+     */
+    private $allowedTables;
+
+    /**
      * Dump constructor.
+     *
+     * @param string[] $tableWhitelist
      *
      * @throws Exception
      */
-    public function __construct()
+    public function __construct(array $tableWhitelist)
     {
         $this->pdo = Connection::get_db_pdo();
+        $this->allowedTables = $tableWhitelist;
     }
 
     /**
-     * Create a UUID
-     */
-    private function makeUuid() {
-        $data = openssl_random_pseudo_bytes( 16 );
-        return vsprintf( '%s%s-%s-%s-%s-%s%s%s', str_split( bin2hex( $data ), 4 ) );
-    }
-
-    /**
-     * Extract all rows from all tables and create files containing DB data.
+     * Read a complete table (return contents as an 2-dimensional array)
      *
-     * @return array List containing paths to the files created.
+     * @param string $tableName The name of the table. This is validated against a whitelist.
+     *
+     * @return array
      */
-    public function loadAllRowsFromAllTables(): array
+    public function loadAllRowsFromTable(string $tableName): array
     {
-        $files = array();
-
-        $sql = 'SELECT table_name FROM information_schema.tables '
-               . "WHERE table_schema = 'public' ORDER BY table_name";
-        $stmt = $this->pdo->prepare($sql);
-
-        if ($stmt->execute()) {
-            while ($tableName = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $table = $tableName['table_name'];
-                // echo "<h3>" . $table . "</h3>";
-                $filename = $this->loadAndDumpAllRowsFromTable($table);
-                // array_push($files, $filename);
-                $files[$table] = $filename;
-            }
+        // check against whitelist
+        if (!in_array($tableName, $this->allowedTables, true)) {
+            // for now, simply return an empty array.. since this is not a valid use case.
+            return [];
         }
 
-        return $files;
-    }
-
-    /**
-     * Create a file containing all DB data for a particular table.
-     *
-     * @param string $tableName The name of the table.
-     *
-     * @return string The name of the file.
-     */
-    private function loadAndDumpAllRowsFromTable(string $tableName): string
-    {
-        $filename = "db_dump_" . $tableName . "_" . $this->makeUuid() . ".txt";
-
-        // Ensure file is empty
-        $myfile = fopen($filename, "w") or die("Unable to open file!");
-        fwrite($myfile, "");
-        fclose($myfile);
-
-        // Concatenating the table name is safe here, since the tableName is obtained from the database itself.
+        // Concatenating the table name is safe here, since the tableName is
+        // checked against a whitelist of allowed values.
         $sql = 'SELECT * FROM ' . $tableName;
         $stmt = $this->pdo->prepare($sql);
+
+        $header = null;
+        $result = [];
 
         // Write DB data to file
         if ($stmt->execute()) {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $myfile = fopen($filename, "a+") or die("Unable to open file!");
-                foreach($row as $key => $value) {
-                    fwrite($myfile, $key . ": " . $value . "\n");
+                if ($header === null) {
+                    // use keys as header row
+                    $header = array_keys($row);
+                    // this is also the first row of the result
+                    $result[] = $header;
                 }
-                fwrite($myfile, "\n");
-                fclose($myfile);
+                $r = [];
+                // iterate over the header array, to maintain the same order of columns
+                foreach ($header as $key) {
+                    $r[] = $row[$key];
+                }
+                $result[] = $r;
             }
         }
-
-        return $filename;
+        return $result;
     }
 }
