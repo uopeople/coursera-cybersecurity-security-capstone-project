@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var \lib\model\MessageView[] $boxMessages ;
+ * @var \lib\model\MessageView[] $boxMessages;
  */
 
 use lib\components\Alertbox;
