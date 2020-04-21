@@ -32,4 +32,3 @@ $peter = $users->loadUserByUsername('peter');
 echo '<pre>';
 var_dump($peter);
 echo '</pre>';
-

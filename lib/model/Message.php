@@ -106,6 +106,14 @@ class Message
     }
 
     /**
+     * @return string
+     */
+    public function getMessageDate(): string
+    {
+        return $this->messageDate;
+    }
+
+    /**
      * @return bool
      */
     public function isRead(): bool
