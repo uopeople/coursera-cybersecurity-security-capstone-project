@@ -15,7 +15,7 @@
         <p>To: <?= htmlspecialchars($m->getRecipientName()); ?></p>
         <p>Date/Time (UTC): <?= htmlspecialchars($m->getMessage()->getMessageDate()); ?></p>
         <p class="message-body">
-            <?= htmlspecialchars($m->getDecryptedMessageBody()) ?>
+            <?= nl2br(htmlspecialchars($m->getDecryptedMessageBody())) ?>
         </p>
     </section>
     <hr>
