@@ -1,63 +1,48 @@
 <?php
+
 include __DIR__ . '/../setup.php';
 
+use lib\components\Alertbox;
 use lib\db\Connection;
 use lib\db\Messages;
+use lib\service\SessionManagerPhp;
 use lib\service\SymmetricEncryption;
 
-if (!isset($_SESSION['user'])) {
-    header('Location: /login.php?message=login_required', true, 303);
+$sessMgr = new SessionManagerPhp();
+$user = $sessMgr->getAuthenticatedUser();
+if (!$user) {
+    header('Location: /login.php?message=login-required', true, 303);
     exit();
 }
-
-$user = $_SESSION["user"];
-$userid = $user->getId();
 
 try {
     $encryption = SymmetricEncryption::fromEnvironment();
     $message = new Messages(Connection::get_db_pdo(), $encryption);
-    $boxMessages = $message->loadMessageViewsByRecipient($userid);
+    $boxMessages = $message->loadMessageViewsByRecipient($user->getId());
 } catch (Exception $e) {
     echo 'Internal Server Error';
     http_response_code(500);
 }
 
-?>
-<!DOCTYPE html>
-<html lang=en>
+$pageTitle = 'Inbox';
 
-<head>
-    <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1"/>
-    
-    <meta name=author content="Daniel Petrescu">
-    <meta name=author content="Claudio Kressibucher">
-    <meta name=author content="Giuseppe Arcidiacono">
-    <title>Inbox | Messaging System</title>
+ob_start();
 
-    <!-- CSS -->
-    <link rel=stylesheet media=all href=css/index.css>
+if (isset($_GET['message'])) {
+    $msg = '';
+    switch ($_GET['message']) {
+        case 'already-authenticated':
+            $msg = "You are already authenticated.";
+            break;
+        case 'login-successful':
+            $msg = 'Logged in successfully';
+    }
+    if (!empty($msg)) {
+        echo '<section class="section">' . Alertbox::renderInfo(htmlspecialchars($msg)) . '</section>';
+    }
+}
 
-    <!-- Fonts -->
-    <link rel=stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-</head>
+include TEMPLATE_DIR . '/pages/message-box.php';
+$htmlContent = ob_get_clean();
 
-<body>
-<div id="header">
-    <i class="fas fa-comments icon"></i>
-    <h1>Coursera Capstone Project Messaging System</h1>
-</div>
-<div class="container main">
-    <h2>Inbox</h2>
-    <div>
-        <div>
-            <a href="write_message.php">Create New Message</a> <!-- review write_message page address -->
-        </div>
-        <div>
-            <h2>Messages:</h2>
-            <?php include BASE_DIR . '/templates/messages_list.php'; ?>
-        </div>
-    </div>
-</body>
-
-</html>
+include TEMPLATE_DIR . '/page.php';

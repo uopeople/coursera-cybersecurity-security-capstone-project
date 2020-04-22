@@ -29,4 +29,27 @@ class SessionManagerPhp implements SessionManager
         // only contains id and username. (UserInfo may contain additional properties, added by subclasses).
         $_SESSION['user'] = new UserInfo($user->getId(), $user->getUsername());
     }
+
+    function logout()
+    {
+        // Unset all of the session variables
+        $_SESSION = array();
+
+        // delete the session cookie
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
+
+        // destroy the session.
+        session_destroy();
+    }
 }

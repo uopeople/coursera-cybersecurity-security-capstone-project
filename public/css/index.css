@@ -1,4 +1,4 @@
-#header, #main-links, form {
+#header, #main-links {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -21,16 +21,25 @@
     text-decoration: none;
 }
 
+#header {
+    margin-bottom: 1em;
+}
+
 #header i {
     font-size: 2em;
 }
 
-.icon {
-    padding-right: 0.75em;
+.footer {
+    margin-top: 3em;
+    padding: 3rem 1.5rem 3rem;
+}
+
+.button-icon {
+    margin-right: 0.75em;
 }
 
 #main-links {
-    margin-top: 2em;
+    padding: 2em 0;
 }
 
 #main-links p a {
@@ -50,11 +59,23 @@
     font-size: 1.5em;
 }
 
+.is-centered {
+    text-align: center;
+}
+
+.margin-bottom {
+    margin-bottom: 1em;
+}
 
 /* Forms */
 
 form {
-    flex-direction: column;
+    max-width: 800px;
+    margin: auto;
+}
+
+form h2 {
+    margin-bottom: 0.75rem;
 }
 
 .form-container {
@@ -136,10 +157,6 @@ form {
 }
 
 /* Database dump */
-
-#dbdump-main {
-    text-align: center;
-}
 
 #dbdump-table {
     margin: 0 auto;

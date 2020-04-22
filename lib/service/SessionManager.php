@@ -13,4 +13,6 @@ interface SessionManager
     function getAuthenticatedUser(): ?UserInfo;
 
     function setAuthenticatedUser(UserInfo $user);
+
+    function logout();
 }
