@@ -38,7 +38,8 @@ if (isset($_GET['message'])) {
             $msg = 'Logged in successfully';
     }
     if (!empty($msg)) {
-        echo '<section class="section">' . Alertbox::renderInfo(htmlspecialchars($msg)) . '</section>';
+        // note: the $msg is html-encoded in alert-message.php, no need for `htmlspecialchars` here.
+        echo '<section class="section">' . Alertbox::renderInfo($msg) . '</section>';
     }
 }
 

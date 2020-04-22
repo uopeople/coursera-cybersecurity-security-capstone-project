@@ -70,7 +70,7 @@ if (isset($_GET['message'])) {
             break;
     }
     if (!empty($msg)) {
-        echo '<section class="section">' . Alertbox::renderError(htmlspecialchars($msg)) . '</section>';
+        echo '<section class="section">' . Alertbox::renderError($msg) . '</section>';
     }
 }
 

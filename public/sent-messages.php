@@ -36,7 +36,7 @@ if (isset($_GET['message'])) {
             break;
     }
     if (!empty($msg)) {
-        echo '<section class="section">' . Alertbox::renderSuccess(htmlspecialchars($msg)) . '</section>';
+        echo '<section class="section">' . Alertbox::renderSuccess($msg) . '</section>';
     }
 }
 
