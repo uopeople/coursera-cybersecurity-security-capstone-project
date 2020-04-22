@@ -9,7 +9,7 @@ DirectoryIndex index.php index.html index.htm
 
 # Strict-Transport-Security
 <IfModule mod_headers.c>
-Header set Strict-Transport-Security “max-age=10886400; includeSubDomains; preload”
+Header set Strict-Transport-Security "max-age=10886400; includeSubDomains; preload"
 </IfModule>
 
 # Apply a CSP to all HTML and PHP files
