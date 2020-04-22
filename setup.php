@@ -7,6 +7,8 @@
 
 include __DIR__ . '/vendor/autoload.php';
 
+define('TEMPLATE_DIR', __DIR__ . '/templates');
+
 define('BASE_DIR', __DIR__);
 
 // use a function, to not pollute global namespace with variable names...
