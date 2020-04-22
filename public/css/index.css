@@ -139,22 +139,26 @@ form {
 .container.main {
     max-width: 1000px;
     margin: auto;
+}
+
+/* Database dump */
+
+#dbdump-main {
     text-align: center;
 }
 
-/* Tables */
-table {
+#dbdump-table {
     margin: 0 auto;
     width: 25%;
     min-width: 250px;
 }
 
-table td, table th {
+#dbdump-table td, #dbdump-table th {
     border: 1px solid #b0b0b0;
     text-align: center;
     padding: 8px;
 }
 
-table tr:nth-child(even) {
+#dbdump-table tr:nth-child(even) {
     background-color: #eeeeee;
 }
