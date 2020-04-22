@@ -17,7 +17,7 @@ include __DIR__ . '/../setup.php';
 $sessMgr = new SessionManagerPhp();
 $sender = $sessMgr->getAuthenticatedUser();
 if (!$sender) {
-    header('Location: /login.php?message=login_required', true, 303);
+    header('Location: /login.php?message=login-required', true, 303);
     exit();
 }
 

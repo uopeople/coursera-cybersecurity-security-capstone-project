@@ -8,7 +8,7 @@
 <html lang=en>
 
 <?php include __DIR__ . '/header.php'; ?>
-<?php include __DIR__ . '/body_wrapper.php'; ?>
+<?php include __DIR__ . '/body-wrapper.php'; ?>
 
 </html>
 

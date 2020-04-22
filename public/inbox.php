@@ -11,7 +11,7 @@ use lib\service\SymmetricEncryption;
 $sessMgr = new SessionManagerPhp();
 $user = $sessMgr->getAuthenticatedUser();
 if (!$user) {
-    header('Location: /login.php?message=login_required', true, 303);
+    header('Location: /login.php?message=login-required', true, 303);
     exit();
 }
 
@@ -26,8 +26,6 @@ try {
 
 // this variables are required by included templates...
 $pageTitle = 'Inbox';
-$linkToInbox = false;
-$linkToSentBox = true;
 $isInbox = true;
 
 ob_start();

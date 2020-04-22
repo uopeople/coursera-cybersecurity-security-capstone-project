@@ -12,7 +12,7 @@ $isInbox = isset($isInbox) && $isInbox;
 <article class="message is-dark <?= $isInbox && $message->getMessage()->isRead() ? 'message-is-read' : '' ?>">
     <div class="message-header">
         <p><?= htmlspecialchars($message->getDecryptedTitle()) ?></p>
-        <p class="is-pulled-right"><?= htmlspecialchars($message->getMessage()->getMessageDate()) ?> (UTC Time)</p>
+        <p class="is-pulled-right"><?= htmlspecialchars($message->getMessage()->getMessageDate()) ?> UTC</p>
     </div>
     <div class="message-body">
         <?php if ($isInbox && !$message->getMessage()->isRead()): ?>

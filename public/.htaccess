@@ -1,0 +1,40 @@
+#DON'T SHOW DIRECTORY LISTINGS
+Options -Indexes
+
+#FOLLOW SYMBOLIC LINKS
+Options +FollowSymLinks
+
+#SET DEFAULT HANDLER
+DirectoryIndex index.php index.html index.htm
+
+# Strict-Transport-Security
+<IfModule mod_headers.c>
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+# X-XSS-Protection
+Header set X-XSS-Protection "1; mode=block"
+
+# X-Frame-Options
+Header set X-Frame-Options "SAMEORIGIN"
+
+# X-Content-Type-Options
+Header set X-Content-Type-Options "nosniff"
+
+# Referrer-Policy
+Header set Referrer-Policy "same-origin"
+
+# Feature-Policy
+Header set Feature-Policy "geolocation 'self'; vibrate 'none'"
+
+</IfModule>
+
+# Apply a CSP to all HTML and PHP files
+<FilesMatch "\.(html|php)$">
+Header set Content-Security-Policy "policy-definition"
+</FilesMatch>
+
+
+
+
+
+

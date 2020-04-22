@@ -22,15 +22,23 @@
 }
 
 #header {
-    margin-top: 1em;
     margin-bottom: 1em;
 }
+
 #header i {
     font-size: 2em;
 }
 
+.footer {
+    margin-top: 3em;
+    padding: 3rem 1.5rem 3rem;
+}
+
+.button-icon {
+    margin-right: 0.75em;
+}
+
 #main-links {
-    margin-top: 2em;
     padding: 2em 0;
 }
 
@@ -51,6 +59,13 @@
     font-size: 1.5em;
 }
 
+.is-centered {
+    text-align: center;
+}
+
+.margin-bottom {
+    margin-bottom: 1em;
+}
 
 /* Forms */
 
@@ -59,8 +74,8 @@ form {
     margin: auto;
 }
 
-form {
-    flex-direction: column;
+form h2 {
+    margin-bottom: 0.75rem;
 }
 
 .form-container {
@@ -139,23 +154,23 @@ form {
 .container.main {
     max-width: 1000px;
     margin: auto;
-    text-align: center;
 }
 
-/* Tables */
-table {
+/* Database dump */
+
+#dbdump-table {
     margin: 0 auto;
     width: 25%;
     min-width: 250px;
 }
 
-table td, table th {
+#dbdump-table td, #dbdump-table th {
     border: 1px solid #b0b0b0;
     text-align: center;
     padding: 8px;
 }
 
-table tr:nth-child(even) {
+#dbdump-table tr:nth-child(even) {
     background-color: #eeeeee;
 }
 
