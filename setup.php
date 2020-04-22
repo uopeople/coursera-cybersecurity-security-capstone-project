@@ -22,7 +22,8 @@ function appSetup()
         'cookie_lifetime' => 0, // ends ends with browser session...
         'cookie_samesite' => 'Lax',
     ];
-    if (!empty($_REQUEST['HTTPS'])) {
+    // see https://www.php.net/manual/en/reserved.variables.server.php for how this variable works
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
         $options['cookie_secure'] = true;
     }
     $ok = session_start($options);
