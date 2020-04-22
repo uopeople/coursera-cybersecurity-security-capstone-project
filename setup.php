@@ -23,7 +23,11 @@ function appSetup()
         'cookie_samesite' => 'Lax',
     ];
     // see https://www.php.net/manual/en/reserved.variables.server.php for how this variable works
-    if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || strval($_SERVER['SERVER_PORT']) === '443') {
+    if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || strval($_SERVER['SERVER_PORT']) === '443'
+        || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https'
+        || strval($_SERVER['HTTP_X_FORWARDED_PORT']) === '443'
+    ) {
         $options['cookie_secure'] = true;
     }
     $ok = session_start($options);
