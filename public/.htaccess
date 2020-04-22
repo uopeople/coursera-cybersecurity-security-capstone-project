@@ -30,7 +30,7 @@ Header set Feature-Policy "geolocation 'self'; vibrate 'none'"
 
 # Apply a CSP to all HTML and PHP files
 <FilesMatch "\.(html|php)$">
-Header set Content-Security-Policy "policy-definition"
+Header set Content-Security-Policy "default-src 'self'"
 </FilesMatch>
 
 
