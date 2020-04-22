@@ -12,7 +12,6 @@ class IpUtils
      */
     public static function getIp(): ?string
     {
-        // TODO how is our runtime environment? do we get the remote address via a proxy header?
         //  See https://www.codexworld.com/how-to/get-user-ip-address-php/
         //  But note that if the proxy does NOT set this header, and instead relays it from the client (which it shouldn't),
         //  then this would be a security risk, since the client could *very easily* fake it's IP.

@@ -3,6 +3,8 @@ include __DIR__ . '/../../setup.php';
 
 use lib\db\Dump;
 
+$pageTitle = 'DB Dump';
+
 // the tables that can be dumped...
 $tables = ['users', 'messages'];
 
@@ -39,49 +41,8 @@ if (isset($_GET['table']) && in_array($_GET['table'], $tables, true)) {
 
 // if 'table' param is not set (or invalid), show list of links
 
-?>
+ob_start();
+include TEMPLATE_DIR . '/pages/dbdump/index.php';
+$htmlContent = ob_get_clean();
 
-<html lang=en>
-
-<head>
-    <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-    <meta name=viewport content="width=device-width, initial-scale=1"/>
-
-    <meta name=author content="Daniel Petrescu">
-    <meta name=author content="Claudio Kressibucher">
-    <meta name=author content="Giuseppe Arcidiacono">
-    <title>Dump | Messaging System</title>
-
-    <!-- CSS -->
-    <link rel=stylesheet media=all href=../css/index.css>
-
-    <!-- Fonts -->
-    <link rel=stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-</head>
-
-<body>
-<div id="header">
-    <i class="fas fa-comments"></i>
-    <h1>Coursera Capstone Project Messaging System</h1>
-</div>
-<div id="dbdump-main">
-    <h2>DB Dump</h2>
-    <table id="dbdump-table">
-        <tr>
-            <th>Table</th>
-            <th>Data</th>
-        </tr>
-        <?php foreach ($tables as $table): ?>
-            <tr>
-                <td>
-                    <?php echo $table ?>
-                </td>
-                <td>
-                    <a target="_blank" href="/dbdump/index.php?table=<?= urlencode($table) ?>">Download data</a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-</body>
-
-</html>
+include TEMPLATE_DIR . '/page.php';

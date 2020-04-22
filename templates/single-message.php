@@ -6,7 +6,7 @@
 <article class="message is-dark">
     <div class="message-header">
         <p><?= htmlspecialchars($message->getDecryptedTitle()) ?></p>
-        <p class="is-pulled-right"><?= htmlspecialchars($message->getMessage()->getMessageDate()) ?> (UTC Time)</p>
+        <p class="is-pulled-right"><?= htmlspecialchars($message->getMessage()->getMessageDate()) ?> UTC</p>
     </div>
     <div class="message-body">
         <i><?= htmlspecialchars($message->getSenderName()) ?></i> to <i><?= htmlspecialchars($message->getRecipientName()) ?></i>

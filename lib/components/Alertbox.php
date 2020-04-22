@@ -25,7 +25,7 @@ class Alertbox
     private static function renderAlertMessage(string $body, ?string $title, string $colorModifier): string
     {
         ob_start();
-        include TEMPLATE_DIR . '/alert_message.php';
+        include TEMPLATE_DIR . '/alert-message.php';
         return ob_get_clean();
     }
 }

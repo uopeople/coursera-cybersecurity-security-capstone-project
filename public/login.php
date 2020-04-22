@@ -29,10 +29,8 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
         } else {
             if ($result->isLocked()) {
                 header('Location: ' . AppInfo::urlLoginPage() . '?message=account-locked', true, 303);
-            } else {
-                if ($result->isWrongCredentialsProvided()) {
-                    header('Location: ' . AppInfo::urlLoginPage() . '?message=credentials-invalid', true, 303);
-                }
+            } elseif ($result->isWrongCredentialsProvided()) {
+                header('Location: ' . AppInfo::urlLoginPage() . '?message=credentials-invalid', true, 303);
             }
         }
     } catch (Exception $e) {
