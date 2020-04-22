@@ -43,7 +43,7 @@ class Users
      */
     public function loadUserById(int $userId): ?User
     {
-        $sql = 'SELECT id, username, email, password, password_reset, login_ip, login_attempts, locked_time FROM users WHERE id = ?';
+        $sql = 'SELECT id, username, email, password, login_ip, login_attempts, locked_time FROM users WHERE id = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$userId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,7 +65,7 @@ class Users
      */
     public function loadUserByUsername(string $username): ?User
     {
-        $sql = 'SELECT id, username, email, password, password_reset, login_ip, login_attempts, locked_time FROM users WHERE username = ?';
+        $sql = 'SELECT id, username, email, password, login_ip, login_attempts, locked_time FROM users WHERE username = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -87,7 +87,7 @@ class Users
      */
     public function loadUserByEmail(string $email): ?User
     {
-        $sql = 'SELECT id, username, email, password, password_reset, login_ip, login_attempts, locked_time FROM users WHERE email = ?';
+        $sql = 'SELECT id, username, email, password, login_ip, login_attempts, locked_time FROM users WHERE email = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -198,10 +198,6 @@ class Users
 
     private function createUserEntityFromDbRecord(array $dbRecord): User
     {
-        $pwReset = $dbRecord['password_reset'];
-        if ($pwReset !== null) {
-            $pwReset = boolval($pwReset);
-        }
         $lockedTimeStr = $dbRecord['locked_time'];
         if ($lockedTimeStr !== null) {
             $lockedTime = DateTime::createFromFormat(
@@ -217,7 +213,6 @@ class Users
             $dbRecord['username'],
             $dbRecord['email'],
             $dbRecord['password'],
-            $pwReset,
             $dbRecord['login_ip'],
             intval($dbRecord['login_attempts']),
             $lockedTime

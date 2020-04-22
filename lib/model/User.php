@@ -25,11 +25,6 @@ class User extends UserInfo
     private $password;
 
     /**
-     * @var bool | null
-     */
-    private $passwordReset;
-
-    /**
      * @var string | null
      */
     private $loginIp;
@@ -49,7 +44,6 @@ class User extends UserInfo
         string $username,
         string $email,
         string $password,
-        ?bool $passwordReset,
         ?string $loginIp,
         int $loginAttempts,
         ?DateTime $lockedTime
@@ -57,11 +51,9 @@ class User extends UserInfo
         parent::__construct($id, $username);
         $this->email = $email;
         $this->password = $password;
-        $this->passwordReset = $passwordReset;
         $this->loginIp = $loginIp;
         $this->loginAttempts = $loginAttempts;
         $this->lockedTime = $lockedTime;
-        $this->passwordReset = $passwordReset;
     }
 
     /**
@@ -78,14 +70,6 @@ class User extends UserInfo
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function getPasswordReset(): ?bool
-    {
-        return $this->passwordReset;
     }
 
     /**
