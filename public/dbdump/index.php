@@ -29,9 +29,9 @@ if (isset($_GET['table']) && in_array($_GET['table'], $tables, true)) {
 
     // write response
     header("Expires: 0");
-    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: no-store");
     header('Content-Type: text/csv');
-    header('Content-Disposition: attachment filename="' . $filename . '";');
+    header('Content-Disposition: attachment; filename="' . $filename . '";');
     echo $data;
 
     exit();
