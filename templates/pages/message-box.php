@@ -1,12 +1,8 @@
 <?php
 
-use lib\components\AppInfo;
-
 /**
  * @var \lib\model\MessageView[] $boxMessages
  * @var string                   $pageTitle
- * @var bool|null                $linkToInbox
- * @var bool|null                $linkToSentBox
  *
  */
 ?>

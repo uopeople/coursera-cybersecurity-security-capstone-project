@@ -25,8 +25,6 @@ try {
 }
 
 $pageTitle = 'Sent messages';
-$linkToInbox = true;
-$linkToSentBox = false;
 
 ob_start();
 

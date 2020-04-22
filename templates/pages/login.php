@@ -1,10 +1,11 @@
 <?php
 
-// no variables needed. (only global $_GET)
+// no variables needed. (only global $_GET, and $_POST)
 
 use lib\components\Alertbox;
 use lib\components\AppInfo;
 
+$enteredUsername = $_POST['username'] ?? '';
 ?>
 
 <?php if (isset($_GET['message'])): ?>
