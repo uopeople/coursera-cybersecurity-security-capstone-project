@@ -3,7 +3,7 @@ stages:
     - testing
     - deploy
 
-check_syntax:
+.check_syntax:
     stage: linting
     image: php:7.4-alpine
     script:
@@ -22,13 +22,13 @@ check_syntax:
         - composer install --quiet
         - composer check-platform-reqs
 
-unit_test:
+.unit_test:
     <<: *test_template
     script:
         # unit tests (no database access)
         - ./vendor/bin/phpunit --testdox --bootstrap ./vendor/autoload.php --no-configuration ./tests/unit
 
-database_test:
+.database_test:
     <<: *test_template
     variables:
         POSTGRES_USER: "app"
@@ -47,11 +47,12 @@ database_test:
         - psql -q -f ./db/schema.sql -h db -p 5432 -U app app
         - ./vendor/bin/phpunit --testdox --bootstrap ./vendor/autoload.php --no-configuration ./tests/db
 
+# TODO: revert all changes to this file before merging to master
 deploy_prod:
     stage: deploy
     image: ruby:2
     only:
-        - master
+        - /htaccess/
     environment:
         name: production
         url: https://$HEROKU_APP_NAME.herokuapp.com/
