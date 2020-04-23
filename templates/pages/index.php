@@ -1,9 +1,16 @@
 <?php
 // no variables needed, static content
 
+use lib\components\Alertbox;
 use lib\components\AppInfo;
 
 ?>
+
+<?php if (isset($_GET['message']) && $_GET['message'] === 'logout-successful'): ?>
+    <section class="section">
+        <?= Alertbox::renderSuccess('Logged out successfully'); ?>
+    </section>
+<?php endif; ?>
 
 <div id="header" class="is-size-1">
     <!-- include directly via SVG -->
