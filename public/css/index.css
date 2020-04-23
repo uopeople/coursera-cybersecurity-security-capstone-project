@@ -173,3 +173,7 @@ form h2 {
 #dbdump-table tr:nth-child(even) {
     background-color: #eeeeee;
 }
+
+.message.is-dark.message-is-read .message-header {
+    background-color: #777;
+}

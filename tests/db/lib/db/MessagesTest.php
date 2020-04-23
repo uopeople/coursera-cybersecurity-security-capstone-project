@@ -170,4 +170,52 @@ class MessagesTest extends TestCase
         );
         $this->assertTrue($ok, 'failed inserting message 3');
     }
+
+    public function test_markAsRead_sets_the_read_flag_of_the_given_message()
+    {
+        // message 1 from sender to recipient
+        $ok = $this->messages->insertNewMessage(
+            $this->sender->getId(),
+            $this->recipient->getId(),
+            'message 1',
+            'test-message',
+            '2020-03-03 10:10:10',
+            false
+        );
+        $this->assertTrue($ok, 'failed inserting message 1');
+
+        $msgs = $this->messages->loadMessagesBySender($this->sender->getId());
+
+        $message = $msgs[0];
+        $id = $message->getId();
+
+        // the actual test: mark message as read
+        $ok = $this->messages->markAsRead($id, $this->recipient->getId());
+        $this->assertTrue($ok);
+        $this->assertTrue($this->messages->loadMessageById($id)->isRead());
+    }
+
+    public function test_markAsRead_does_not_set_read_flag_if_recipient_does_not_match()
+    {
+        // message 1 from sender to recipient
+        $ok = $this->messages->insertNewMessage(
+            $this->sender->getId(),
+            $this->recipient->getId(),
+            'message 1',
+            'test-message',
+            '2020-03-03 10:10:10',
+            false
+        );
+        $this->assertTrue($ok, 'failed inserting message 1');
+
+        $msgs = $this->messages->loadMessagesBySender($this->sender->getId());
+
+        $message = $msgs[0];
+        $id = $message->getId();
+
+        // the sender tries to mark the message as read (which is not allowed)
+        $ok = $this->messages->markAsRead($id, $this->sender->getId());
+        $this->assertFalse($ok);
+        $this->assertFalse($this->messages->loadMessageById($id)->isRead());
+    }
 }

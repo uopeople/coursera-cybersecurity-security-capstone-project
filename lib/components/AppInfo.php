@@ -55,4 +55,9 @@ class AppInfo
     {
         return self::$baseUrl . 'write-message.php';
     }
+
+    public static function urlSetMessageAsRead(): string
+    {
+        return self::$baseUrl . 'set-message-read.php';
+    }
 }

@@ -3,6 +3,7 @@
 /**
  * @var \lib\model\MessageView[] $boxMessages
  * @var string                   $pageTitle
+ * @var bool|null                $isInbox (this is used in 'messages_list.php' and 'single-message.php')
  *
  */
 ?>
