@@ -108,16 +108,11 @@ class RegistrationFormValidation
         if (empty($password)) {
             // Password is empty
             $this->setError($this->passErr, "Password is required");
-        } elseif(strlen($password) > 255) {
-            // Password is too long
-            $this->setError($this->passErr,
-                           "Password cannot be longer than 255 characters");
-        } elseif(strlen($password) < 10) {
-            // Password is too short
-            $this->setError($this->passErr, "Password is too short");
-        } elseif(preg_match_all("/^[[:digit:]]+$/", $password)) {
-            // Password is made up of numbers only
-            $this->setError($this->passErr, "Weak password (contains numbers only)");
+        } else {
+            $passwordError = PasswordStrengthValidation::checkPassword($password, $username ?? '');
+            if (!empty($passwordError)) {
+                $this->setError($this->passErr, $passwordError);
+            }
         }
 
         if (empty($password_repeat)) {
@@ -185,4 +180,3 @@ class RegistrationFormValidation
     }
 }
 
-?>
