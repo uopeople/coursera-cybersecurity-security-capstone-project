@@ -16,6 +16,7 @@
             <input id="field-recipient"
                    name="recipient" class="input"
                    type="text"
+                   autofocus
                    value="<?= htmlspecialchars($validation->getRecipientName()) ?>"
                    placeholder="The username of the recipient">
         </div>
