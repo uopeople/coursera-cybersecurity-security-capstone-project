@@ -136,7 +136,8 @@ class Messages
                 m.title, m.message, m.date, m.read FROM messages AS m 
                 INNER JOIN users AS r ON r.id = m.recipient
                 INNER JOIN users AS s ON s.id = m.sender
-                WHERE recipient = ? ORDER BY date desc';
+                WHERE recipient = ?
+                ORDER BY read, date desc';
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(1, $recipientId, PDO::PARAM_INT);
         return $this->fetchListOfMessageViews($stmt);
@@ -167,6 +168,29 @@ class Messages
         }
     }
 
+    /**
+     * Marks the message as read, if and only if it was sent to the recipient $recipientId
+     *
+     * @param int $msgId The message that should be marked as 'read'
+     * @param int $recipientId The recipient of the message.
+     *
+     * @return bool Whether or not the message was updated.
+     */
+    public function markAsRead(int $msgId, int $recipientId): bool
+    {
+        $sql = 'UPDATE messages SET read = true WHERE id = ? AND recipient = ?';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(1, $msgId, PDO::PARAM_INT);
+        $stmt->bindValue(2, $recipientId, PDO::PARAM_INT);
+        $stmt->execute();
+        $updatedCnt = $stmt->rowCount();
+        if ($updatedCnt < 1) {
+            // no rows updated: this means that either the message does not exist, or the message was not sent
+            // to $recipientId. (Or the message was already on state 'read = true')
+            return false;
+        }
+        return true;
+    }
 
     private function createMessageEntityFromDbRecord(array $dbRecord): Message
     {
