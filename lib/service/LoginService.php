@@ -96,9 +96,13 @@ class LoginService
             // Note: even if the user gets locked now, *this* request was denied
             // because of wrong credentials, not locked user.
             // (The user sees the "you're locked out" message after the next attempt)
-            $this->dbUsers->lockUser($user->getId(), $requestIp);
+            if ($requestIp) { // note: without ip, it makes no sense to lock the user...
+                $this->dbUsers->lockUser($user->getId(), $requestIp);
+            }
         } else {
-            $this->dbUsers->incrementLoginAttempts($user->getId(), $requestIp);
+            if ($requestIp) {
+                $this->dbUsers->incrementLoginAttempts($user->getId(), $requestIp);
+            }
         }
         return LoginResult::createWrongCrendentialsResult();
     }

@@ -2,6 +2,11 @@
 
 use lib\components\AppInfo;
 
+/**
+ * @var \lib\service\RegistrationFormValidation validation
+ * @var string|null $registrationErr
+ */
+
 ?>
 
 <section class="section">

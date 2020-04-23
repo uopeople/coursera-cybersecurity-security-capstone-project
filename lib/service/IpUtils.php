@@ -12,9 +12,7 @@ class IpUtils
      */
     public static function getIp(): ?string
     {
-        //  See https://www.codexworld.com/how-to/get-user-ip-address-php/
-        //  But note that if the proxy does NOT set this header, and instead relays it from the client (which it shouldn't),
-        //  then this would be a security risk, since the client could *very easily* fake it's IP.
+        // HTTP_X_FORWARDED_FOR is the IP of the user, which was forwarded by the heroku proxy server.
         if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
             $ip = reset($ipList);

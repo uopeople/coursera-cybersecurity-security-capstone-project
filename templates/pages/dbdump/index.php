@@ -2,6 +2,9 @@
 
 use lib\components\AppInfo;
 
+/**
+ * @var string[] $tables A list of tables. MUST come from trusted source (i.e. hardcoded whitelist, not user input)
+ */
 ?>
 
 <section class="section">

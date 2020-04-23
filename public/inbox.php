@@ -49,6 +49,7 @@ if (isset($_GET['message'])) {
             break;
     }
     if (!empty($msg)) {
+        // note: the $msg is html-encoded in alert-message.php, no need for `htmlspecialchars` here.
         echo '<section class="section">' . ($isErr ? Alertbox::renderError($msg) : Alertbox::renderInfo($msg)) . '</section>';
     }
 }
