@@ -1,6 +1,6 @@
 {
-    "name": "dpet23/coursera_messaging_system",
-    "description": "Coursera Capstone Project Messaging System",
+    "name": "adewale/coursera_messaging_system",
+    "description": "Cybersecurity Capstone Project Messaging System",
     "license": "proprietary",
     "require": {
         "php": "^7.3.11",
