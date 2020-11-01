@@ -13,7 +13,7 @@ use lib\components\AppInfo;
     <meta http-equiv=Content-Type content="text/html; charset=utf-8">
     <meta name=viewport content="width=device-width, initial-scale=1"/>
 
-    <meta name=author content="Group 8 (Daniel Petrescu, Claudio Kressibucher, Giuseppe Arcidiacono">
+    <meta name=author content="Adewale Olalekan">
 
     <title><?= (isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | ' : '') . htmlspecialchars(AppInfo::APP_NAME) ?></title>
 
