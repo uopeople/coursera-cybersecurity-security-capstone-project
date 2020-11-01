@@ -7,7 +7,7 @@ namespace lib\components;
 class AppInfo
 {
 
-    const APP_NAME = 'Chat no. 8';
+    const APP_NAME = 'Cybersecurity Capstone';
 
     private static $baseUrl = '/';
 
