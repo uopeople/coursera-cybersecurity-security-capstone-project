@@ -6,8 +6,8 @@ use lib\components\AppInfo;
 <footer class="footer">
     <div class="content has-text-centered">
         <p>
-            <strong><?= AppInfo::APP_NAME ?></strong>, the messaging system of Group 8, 2020.
-            The source code is available <a href="https://gitlab.com/dpet23/coursera-security-capstone-test">on GitLab</a>.
+            <strong><?= AppInfo::APP_NAME ?></strong>, secure messaging system.
+            The source code is available <a href="https://github.com/uopeople/coursera-cybersecurity-security-capstone-project">on GitHub</a>.
         </p>
         <hr>
         <p>
