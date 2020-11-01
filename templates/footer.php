@@ -6,7 +6,7 @@ use lib\components\AppInfo;
 <footer class="footer">
     <div class="content has-text-centered">
         <p>
-            <strong><?= AppInfo::APP_NAME ?></strong>, secure messaging system.
+            <strong><?= AppInfo::APP_NAME ?></strong>, Simple, Secure Messaging System.
             The source code is available <a href="https://github.com/uopeople/coursera-cybersecurity-security-capstone-project">on GitHub</a>.
         </p>
         <hr>
