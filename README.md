@@ -1,10 +1,10 @@
-# Coursera Security Capstone
+# Coursera Cybersecurity Capstone Project
 
-April 2020
+November 2020
 
 ## About
 
-Developed as a capstone project for the [Cybersecurity Specialization](https://www.coursera.org/learn/cyber-security-capstone), from the University of Maryland, College Park.
+This is a fork of this [repository](https://github.com/dpet23/coursera-security-capstone-test) developed as a capstone project for the [Cybersecurity Specialization](https://www.coursera.org/learn/cyber-security-capstone), from the University of Maryland, College Park.
 
 ## Developers
 
@@ -14,7 +14,7 @@ Developed as a capstone project for the [Cybersecurity Specialization](https://w
 
 ## Access
 
-The project is hosted at: https://coursera-ccp-group8-apr2020.herokuapp.com/
+The project is hosted at: https://adewale-olalekan.herokuapp.com/
 
 Heroku resources used:
 
