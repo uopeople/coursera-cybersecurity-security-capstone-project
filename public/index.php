@@ -11,7 +11,7 @@ if ($sessMgr->getAuthenticatedUser()) {
     return;
 }
 
-$pageTitle = 'Cybersecurity Specialization Capstone Project Messaging System';
+$pageTitle = 'Cybersecurity Capstone Messaging System';
 
 // store pages/index.php as $htmlContent
 ob_start();
